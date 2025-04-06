@@ -5,20 +5,25 @@ import { updateMarkers } from '../ui/markers.js';
 import { progressionData, screenStartNodes, getScreenForNumber } from '../data/progressionData.js';
 
 // Handles clicks coming from markers.js
-// Now receives a clickType: 'progression', 'navigation', or 'static_info'
+// Receives clickType: 'progression' or 'navigation'
 export function handleMarkerClick(markerContent, clickType) {
-    const currentStep = getState().currentPlayerStep;
-
     switch (clickType) {
         case 'progression':
-            // This should only happen if the clicked marker *is* the current step
-            const stepData = progressionData[currentStep];
+            // Clicked a numeric marker (Green are always clickable, Orange only if current step)
+            const clickedStepNumber = parseInt(markerContent, 10);
+            if (isNaN(clickedStepNumber)) {
+                console.error(`Progression click received for non-numeric content: ${markerContent}`);
+                return;
+            }
+
+            // Get progression data for the *clicked* step number
+            const stepData = progressionData[clickedStepNumber];
             if (stepData) {
-                setState('modalContent', { type: 'progression', step: currentStep, choices: stepData.choices });
+                setState('modalContent', { type: 'progression', step: clickedStepNumber, choices: stepData.choices });
                 openModal();
             } else {
-                // Handle case where current step has no progression data (shouldn't normally happen for active step?)
-                setState('modalContent', { type: 'info', message: `Étape ${currentStep} atteinte (pas de données de progression).` });
+                // Handle case where clicked step has no progression data (e.g., endpoint like 30)
+                setState('modalContent', { type: 'info', message: `Étape ${clickedStepNumber} atteinte (fin de la progression ici?).` });
                 openModal();
             }
             break;
@@ -27,23 +32,14 @@ export function handleMarkerClick(markerContent, clickType) {
             // Clicked a navigation letter
             const targetScreenId = `screen_${markerContent.toLowerCase()}`;
             if (getState().markersData[targetScreenId]) {
-                setActiveScreen(targetScreenId); // Navigate SPA style
+                setActiveScreen(targetScreenId);
             } else {
                 console.warn(`Navigation letter '${markerContent}' corresponds to unknown screen ID '${targetScreenId}'.`);
             }
             break;
 
-        case 'static_info':
-            // Clicked an inactive green number
-            console.log(`Static info requested for: ${markerContent}`);
-            // TODO: Implement the actual display logic for static info
-            // Example: Open modal with static content
-            setState('modalContent', {
-                type: 'static', // Use the 'static' type defined in modal.js
-                content: markerContent // Pass the content (e.g., "15")
-            });
-            openModal();
-            break;
+        // case 'static_info': // Removed - No longer used
+        //     break;
 
         default:
             console.warn(`Unhandled click type: ${clickType} for marker: ${markerContent}`);
@@ -52,7 +48,6 @@ export function handleMarkerClick(markerContent, clickType) {
 
 // Helper function to open the modal for the next step after potential screen updates
 function openNextStepModal(step) {
-    // Use setTimeout to allow DOM updates (marker rendering) to complete
     setTimeout(() => {
         const nextStepData = progressionData[step];
         if (nextStepData && nextStepData.choices && nextStepData.choices.length > 0) {
@@ -62,7 +57,7 @@ function openNextStepModal(step) {
             setState('modalContent', { type: 'info', message: `Vous avez atteint l'étape ${step}. Il n'y a pas d'autres choix ici.` });
             openModal();
         }
-    }, 50); // Small delay for rendering
+    }, 50);
 }
 
 // Handles choice selection from the progression modal
@@ -70,10 +65,18 @@ export function handleChoice(target) {
     let nextStep;
     let targetScreenId;
     const currentAppState = getState();
-    const currentStep = currentAppState.currentPlayerStep;
+    // Get the step number associated with the modal that triggered the choice
+    const choiceOriginStep = currentAppState.modalContent?.step; 
     const currentScreen = currentAppState.currentScreen;
 
-    addVisitedStep(currentStep); // Mark current step as visited
+    // Add the step *from which the choice was made* to visited steps
+    if (choiceOriginStep !== undefined) {
+        addVisitedStep(choiceOriginStep);
+    } else {
+        console.warn("Could not determine origin step for handleChoice.");
+        // Fallback to adding current player step if needed?
+        // addVisitedStep(currentAppState.currentPlayerStep);
+    }
 
     // Determine next step and target screen based on choice
     if (typeof target === 'string') {
@@ -93,22 +96,21 @@ export function handleChoice(target) {
         }
     }
 
-    // Update the player's current step *before* navigation/rendering
+    // IMPORTANT: Update the player's current step state to the chosen next step
     setState('currentPlayerStep', nextStep);
 
-    closeModal(); // Close the current choice modal immediately
+    closeModal(); // Close the choice modal
 
     // Navigate or update markers based on screen change
     if (targetScreenId !== currentScreen) {
-        // Changing screens: setActiveScreen updates hash, triggers hashchange listener
         setActiveScreen(targetScreenId);
-        // We need the modal for the *new* step AFTER the screen has rendered.
-        // Use the helper function with setTimeout.
+        // Modal for the new step will be opened by openNextStepModal below
         openNextStepModal(nextStep);
     } else {
-        // Staying on the same screen: Manually update markers and open modal
+        // Staying on the same screen: Manually update markers
         updateMarkers(currentAppState.markersData[currentScreen], handleMarkerClick);
-        openNextStepModal(nextStep); // Open modal for the new step
+        // Open modal for the new step
+        openNextStepModal(nextStep);
     }
 }
 
@@ -120,44 +122,33 @@ function handleScreenLoadOrHashChange() {
     const defaultScreen = 'screen_a';
     const state = getState();
 
-    // Validate targetScreenId or use default
     if (!targetScreenId || !state.markersData[targetScreenId]) {
-        if (targetScreenId) { // Only log if there was an invalid hash
+        if (targetScreenId) {
            console.warn(`Invalid or missing screen data for hash: '${hash}'. Defaulting to ${defaultScreen}.`);
         }
         targetScreenId = defaultScreen;
-        // Use replaceState to correct the URL hash without adding to history
         if (window.location.hash !== `#${defaultScreen}`) {
            history.replaceState(null, '', `#${defaultScreen}`);
         }
     }
 
-    // Ensure app state reflects the screen being displayed
     if (state.currentScreen !== targetScreenId) {
          setState('currentScreen', targetScreenId);
     }
 
-    // Render markers for the determined screen
     if (state.markersData[targetScreenId]) {
         updateMarkers(state.markersData[targetScreenId], handleMarkerClick);
     } else {
-        // This case should ideally not be reached due to validation above
         console.error(`Marker data unexpectedly not found for screen: ${targetScreenId}`);
     }
-    // Note: Modal opening is handled by handleChoice or handleMarkerClick, not directly on hashchange.
 }
 
 // Initial application setup
 function initializeApp() {
-    createModalStructure(); // Create the modal elements once
-
-    // Perform initial screen load based on current URL hash
+    createModalStructure();
     handleScreenLoadOrHashChange();
-
-    // Listen for hash changes to handle subsequent navigation
     window.addEventListener('hashchange', handleScreenLoadOrHashChange);
-
-    console.log("Application Initialized - SPA Mode");
+    console.log("Application Initialized - SPA Mode (Green markers always active)");
 }
 
 document.addEventListener('DOMContentLoaded', initializeApp);

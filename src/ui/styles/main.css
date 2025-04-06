@@ -71,12 +71,6 @@ body, html {
     /* cursor remains not-allowed by default unless overridden */
 }
 
-/* Specifically clickable inactive green numbers (for static info) */
-.marker--inactive.marker--info-clickable.greenNumber {
-    cursor: help; /* Or pointer, depending on desired UX */
-    /* Opacity remains dimmed from marker--inactive */
-}
-
 /* Navigation letter markers (always clickable for navigation) */
 .marker--nav-letter {
     cursor: pointer;
@@ -91,8 +85,7 @@ body, html {
 
 /* Hover effects - Apply only to clickable markers */
 .marker.marker--active:hover,
-.marker.marker--nav-letter:hover,
-.marker.marker--info-clickable:hover {
+.marker.marker--nav-letter:hover {
     transform: scale(1.1);
     z-index: 10; /* Bring to front */
 }

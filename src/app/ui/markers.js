@@ -111,7 +111,6 @@ export function updateMarkers(markersDataForScreen, clickHandler) {
     markersDataForScreen.forEach(markerData => {
         const markerElement = document.createElement('div');
         markerElement.textContent = markerData.content;
-        // Basic class + type class from data
         markerElement.className = `marker ${markerData.type}`;
         markerElement.style.top = markerData.top;
         markerElement.style.left = markerData.left;
@@ -120,52 +119,60 @@ export function updateMarkers(markersDataForScreen, clickHandler) {
         const markerContent = markerData.content;
         const markerNumber = parseInt(markerContent, 10);
         const isNumeric = !isNaN(markerNumber);
-        const isNavLetter = !isNumeric && markerData.type !== 'backNav'; // Assuming non-numeric are nav letters
+        const isNavLetter = !isNumeric && markerData.type !== 'backNav';
         const isGreen = markerData.type === 'greenNumber';
         const isOrange = markerData.type === 'orangeNumber';
-        const isActiveStep = isNumeric && markerNumber === currentStep;
+        const isCurrentActiveStep = isNumeric && markerNumber === currentStep;
 
-        // --- Add State Classes (based on CSS definitions) --- //
+        // --- Add State Classes (Revised Logic for Green Markers) --- //
         let isClickableForProgression = false;
         let isClickableForNavigation = false;
-        let isClickableForInfo = false;
+        // let isClickableForInfo = false; // Removed
 
-        if (isActiveStep) {
+        if (isGreen && isNumeric) {
+            // ALL Green numeric markers are now active and clickable for progression
             markerElement.classList.add('marker--active');
             isClickableForProgression = true;
-        } else if (isNumeric) {
-            markerElement.classList.add('marker--inactive');
-            if (isGreen) {
-                // Inactive Green numbers are clickable for info
-                markerElement.classList.add('marker--info-clickable');
-                isClickableForInfo = true;
+            // Optionally, add a specific visual distinction for the *actual* current step later if needed
+            // if (isCurrentActiveStep) { markerElement.classList.add('marker--current-step-highlight'); }
+        } else if (isOrange && isNumeric) {
+            // Orange numeric markers: Active only if it's the current step
+            if (isCurrentActiveStep) {
+                markerElement.classList.add('marker--active');
+                isClickableForProgression = true;
+            } else {
+                // Inactive orange numbers - currently not clickable
+                markerElement.classList.add('marker--inactive');
+                // Potentially add marker--disabled if unlock mechanic exists
             }
-            // Inactive Orange numbers remain not clickable (handled by default CSS)
         } else if (isNavLetter) {
-            markerElement.classList.add('marker--nav-letter'); // Navigation letters are always active/clickable
-            // Also add the specific type (e.g., navLetter) for potential specific styling
+            // Navigation letters are always clickable for navigation
+            markerElement.classList.add('marker--nav-letter');
             markerElement.classList.add('navLetter') // Match CSS background rule
             isClickableForNavigation = true;
+        } else if (isNumeric) {
+            // Catch-all for other numeric markers (if any type added later)
+            // Default to inactive unless it's the current step
+             if (isCurrentActiveStep) {
+                markerElement.classList.add('marker--active');
+                isClickableForProgression = true;
+            } else {
+                 markerElement.classList.add('marker--inactive');
+            }
         }
-        // Potentially add marker--disabled for orange numbers if an unlock mechanic exists
-        // else if (isOrange && !isUnlocked(markerNumber)) {
-        //     markerElement.classList.add('marker--disabled');
-        // }
 
         // --- Attach Event Listener --- //
-        if (isClickableForProgression || isClickableForNavigation || isClickableForInfo) {
+        if (isClickableForProgression || isClickableForNavigation) {
             markerElement.addEventListener('click', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                // Pass content and potentially the type of click to the handler
                 let clickType = 'unknown';
                 if (isClickableForProgression) clickType = 'progression';
                 else if (isClickableForNavigation) clickType = 'navigation';
-                else if (isClickableForInfo) clickType = 'static_info';
+                // No longer sending 'static_info'
                 clickHandler(markerContent, clickType);
             });
         }
-        // Non-clickable markers will inherit the default 'not-allowed' cursor from CSS
 
         container.appendChild(markerElement);
     });
