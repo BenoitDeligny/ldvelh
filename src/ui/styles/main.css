@@ -1,0 +1,141 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Prevent scrollbars if map is larger than viewport */
+}
+
+.map-container {
+    position: relative; /* Needed for absolute positioning of children */
+    width: 100%;
+    height: 100vh; /* Use viewport height */
+    background-color: #f0f0f0; /* Light gray background */
+    /* Add display flex for centering the marker area */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 
+    If you want to use an image background later:
+    background-image: url('/assets/your-map-image.jpg');
+    background-size: cover; 
+    background-position: center;
+    */
+}
+
+/* New container for the markers */
+.marker-area {
+    position: relative; /* Markers inside will be positioned relative to this */
+    width: 60%; /* 60% of parent width */
+    height: 80%; /* 80% of parent height */
+    border: 1px solid black; /* Temporary black border */
+    /* background-color: rgba(255, 255, 255, 0.5); /* Optional: Slightly different bg */
+}
+
+/* Base style for all markers - Simplified */
+.marker {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    font-weight: bold;
+    color: white;
+    border-radius: 3px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    opacity: 1; /* Base opacity */
+    cursor: not-allowed; /* Default cursor */
+    transition: transform 0.2s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+}
+
+/* Fixed background colors based on type (using data attribute might be better later) */
+.marker.greenNumber { background-color: #4CAF50; /* Green */ }
+.marker.orangeNumber { background-color: #FF9800; /* Orange */ }
+.marker.navLetter { background-color: #007bff; /* Blue for nav letters? Or reuse green/orange? Let's use blue for now. */ }
+
+/* --- State Classes --- */
+
+/* Active step marker (always clickable for progression) */
+.marker--active {
+    cursor: pointer;
+    opacity: 1;
+    /* Optional: Add visual distinction like a border or brighter shadow */
+    /* border: 2px solid white; */
+}
+
+/* Inactive number markers */
+.marker--inactive {
+    opacity: 0.5; /* Dimmed */
+    /* cursor remains not-allowed by default unless overridden */
+}
+
+/* Specifically clickable inactive green numbers (for static info) */
+.marker--inactive.marker--info-clickable.greenNumber {
+    cursor: help; /* Or pointer, depending on desired UX */
+    /* Opacity remains dimmed from marker--inactive */
+}
+
+/* Navigation letter markers (always clickable for navigation) */
+.marker--nav-letter {
+    cursor: pointer;
+    opacity: 1; /* Always fully visible */
+}
+
+/* Disabled markers (e.g., orange numbers before unlocked) */
+.marker--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Hover effects - Apply only to clickable markers */
+.marker.marker--active:hover,
+.marker.marker--nav-letter:hover,
+.marker.marker--info-clickable:hover {
+    transform: scale(1.1);
+    z-index: 10; /* Bring to front */
+}
+
+/* Modal Styles */
+#modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+
+#modal-content {
+    background-color: #fefefe; /* White background */
+    margin: auto; /* Auto margins for centering */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more specific, like 500px */
+    max-width: 600px;
+    border-radius: 5px;
+    position: relative; /* For positioning the close button */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+#modal-close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#modal-close:hover,
+#modal-close:focus {
+    color: black;
+    text-decoration: none;
+}

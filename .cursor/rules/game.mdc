@@ -1,0 +1,108 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+- Legend has:
+    - Name
+    - Age (between 14 + 1D6)
+    - Strength (should be positif) (1D6 +1 at creation)
+    - Agility (should be positif) (1D6 +1 at creation)
+    - Perception (should be positif) (1D6 +1 at creation)
+    - FightingPower (= to Strength + Agility + Perception + items bonus + powers bonus)
+    - CombatDice (depending on a chart)
+    - Items
+        - Armor
+        - Belt
+        - Boots (it's a pair of, no individual Boot exist)
+        - Bracers (it's a pair of, no individual Bracer exist)
+        - Cloak
+        - Costume
+        - Gloves (it's a pair of, no individual Glove exist)
+        - Helmet
+        - Mask
+        - Necklace
+        - Rings (one on each hand)
+        - Shield
+        - Weapon (type can be ONE_HANDED or TWO_HANDED)
+    - Powers (no information for now)
+    - Knowledges (no information for now)
+
+- Item has:
+    - Id (an UUID ou ULID)
+    - Enhancements
+        - Power (0 by default)
+        - damages (0 by default)
+        - protection (0 by default)
+
+- Monster has same as Legend except:
+    - No Age
+    - No Statistics, instead, directly a FightPower
+    - No Items
+
+
+Fight between Legend and Monster
+
+- Roll initiative:
+    - 1D6 + Agility for Legend
+    - FightPower / 3 for Monster
+- In order:
+    - Fighter will roll all of his CombatDice
+    - The target will be damage by the total
+    - If the target still alive, it will fight back
+    - Until one of them is dead (FightingPower = 0)
+- Note: the number of FightingDice will decrease as the Legend (or Monster) will be damaged
+
+
+# Frontend Progression Rules
+
+- **Initial State:**
+    - Screen contains clickable markers (buttons) represented by numbers (1-30) or letters (A, B, C...). Numbers 1-30 are distributed across multiple screens (A, B, C...).
+    - Markers have a fixed background color defined in their data (`screenData.js`): **Green** (`greenNumber`) or **Orange** (`orangeNumber`).
+    - Green markers (numbers and letters) are initially **clickable** (action TBD - static info?).
+    - Orange markers (numbers and letters) are initially **not clickable**.
+    - Navigation letter markers follow the same Green/Orange clickability rules.
+
+- **Non-Linear Progression:**
+    - Player starts at progression **Step 1**.
+    - Progression doesn't follow numerical order (1 -> 2 -> 3).
+    - Each number step (1-30) defines 1 to 3 **choices** leading to other steps (numbers) or specific screens (letters).
+    - A choice targeting a screen letter (e.g., 'C') directs the player to the **lowest number defined on that screen** (e.g., Screen C starts at number 21).
+    - The progression path ensures all numbers (1-30) are reachable.
+
+- **Dynamic Marker Appearance (Active/Inactive):**
+    - The marker's **background color remains fixed** (Green/Orange).
+    - Only the marker corresponding to the player's **current progression step** becomes visually **Active**: full opacity, pointer cursor. It is the only marker clickable *for progression*.
+    - When the player is at a specific step, all other number markers on the current screen become visually **Inactive**: dimmed opacity. They are not clickable *for progression*.
+    - Crucially: **Inactive Green markers remain clickable** for their default action (e.g., static info).
+    - Navigation letter markers remain visually unchanged (full opacity, pointer cursor) and always clickable for navigation.
+
+- **Progression Modal Interaction:**
+    - Clicking the **Active** number marker opens a modal specific to that step.
+    - The modal **blocks interaction** with the elements behind it (overlay).
+    - The modal displays the available **choices** for that step (e.g., "Aller à 7", "Aller à l'écran B").
+    - Clicking a choice button in the modal:
+        1. Closes the current modal.
+        2. Updates the player's current progression step.
+        3. If the target is a number on a *different* screen, navigates to that screen.
+        4. Updates the markers on the (potentially new) screen to reflect the new active/inactive states.
+        5. Opens the modal for the *new* current step (if it has choices). If the new step has no choices, it might show an informational message instead.
+
+
+
+
+
+
+
+
+
+
+
