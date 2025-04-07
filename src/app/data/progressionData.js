@@ -1,8 +1,5 @@
-// front/src/app/data/progressionData.js
 import { screensData } from './screenData.js';
 
-// Defines the possible choices for each step number.
-// Target can be a number or a screen letter ('A', 'B', 'C').
 export const progressionData = {
   1: { choices: [{ target: 7 }, { target: 18 }] },
   2: { choices: [{ target: 11 }] },
@@ -36,27 +33,22 @@ export const progressionData = {
   30: { choices: [] }, // End point
 };
 
-// Defines the starting step number for each screen letter.
 export const screenStartNodes = {
   A: 1,
   B: 11,
   C: 21,
 };
 
-// --- Screen Number Mapping (Calculated once on module load) ---
 
-// Function to generate the map from screen data
 function createScreenNumberMap() {
     const map = {};
-    console.log("Calculating Screen Number Map..."); // Log to confirm it runs once
     for (const screenId in screensData) {
-        if (screensData.hasOwnProperty(screenId)) { // Good practice check
+        if (screensData.hasOwnProperty(screenId)) {
             screensData[screenId].forEach(marker => {
                 const num = parseInt(marker.content, 10);
                 if (!isNaN(num) && num >= 1 && num <= 30) {
                     if (map[num]) {
-                        // Warn if a number appears on multiple screens
-                        console.warn(`Progression step number ${num} found on multiple screens: ${map[num]} and ${screenId}. Using the first found (${map[num]}).`);
+                        console.warn(`Progression step ${num} found on screens ${map[num]} and ${screenId}. Using ${map[num]}.`);
                     } else {
                         map[num] = screenId;
                     }
@@ -67,10 +59,8 @@ function createScreenNumberMap() {
     return map;
 }
 
-// Calculate the map immediately when the module is loaded
 const screenNumberMap = createScreenNumberMap();
 
-// Helper function to find which screen a number belongs to using the pre-calculated map
 export function getScreenForNumber(number) {
     return screenNumberMap[number] || null;
 } 

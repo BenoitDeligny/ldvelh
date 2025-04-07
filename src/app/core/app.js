@@ -4,32 +4,25 @@ import { setState, getState, addVisitedStep } from './state.js';
 import { updateMarkers } from '../ui/markers.js';
 import { progressionData, screenStartNodes, getScreenForNumber } from '../data/progressionData.js';
 
-// Handles clicks coming from markers.js
-// Receives clickType: 'progression' or 'navigation'
 export function handleMarkerClick(markerContent, clickType) {
     switch (clickType) {
         case 'progression':
-            // Clicked a numeric marker (Green are always clickable, Orange only if current step)
             const clickedStepNumber = parseInt(markerContent, 10);
             if (isNaN(clickedStepNumber)) {
                 console.error(`Progression click received for non-numeric content: ${markerContent}`);
                 return;
             }
-
-            // Get progression data for the *clicked* step number
             const stepData = progressionData[clickedStepNumber];
-            if (stepData) {
+            if (stepData && stepData.choices && stepData.choices.length > 0) {
                 setState('modalContent', { type: 'progression', step: clickedStepNumber, choices: stepData.choices });
                 openModal();
             } else {
-                // Handle case where clicked step has no progression data (e.g., endpoint like 30)
-                setState('modalContent', { type: 'info', message: `Étape ${clickedStepNumber} atteinte (fin de la progression ici?).` });
+                setState('modalContent', { type: 'info', message: `Étape ${clickedStepNumber} atteinte. Vous ne pouvez pas aller plus loin depuis ici.` });
                 openModal();
             }
             break;
 
         case 'navigation':
-            // Clicked a navigation letter
             const targetScreenId = `screen_${markerContent.toLowerCase()}`;
             if (getState().markersData[targetScreenId]) {
                 setActiveScreen(targetScreenId);
@@ -38,15 +31,11 @@ export function handleMarkerClick(markerContent, clickType) {
             }
             break;
 
-        // case 'static_info': // Removed - No longer used
-        //     break;
-
         default:
             console.warn(`Unhandled click type: ${clickType} for marker: ${markerContent}`);
     }
 }
 
-// Helper function to open the modal for the next step after potential screen updates
 function openNextStepModal(step) {
     setTimeout(() => {
         const nextStepData = progressionData[step];
@@ -60,25 +49,19 @@ function openNextStepModal(step) {
     }, 50);
 }
 
-// Handles choice selection from the progression modal
 export function handleChoice(target) {
     let nextStep;
     let targetScreenId;
     const currentAppState = getState();
-    // Get the step number associated with the modal that triggered the choice
-    const choiceOriginStep = currentAppState.modalContent?.step; 
+    const choiceOriginStep = currentAppState.modalContent?.step;
     const currentScreen = currentAppState.currentScreen;
 
-    // Add the step *from which the choice was made* to visited steps
     if (choiceOriginStep !== undefined) {
         addVisitedStep(choiceOriginStep);
     } else {
         console.warn("Could not determine origin step for handleChoice.");
-        // Fallback to adding current player step if needed?
-        // addVisitedStep(currentAppState.currentPlayerStep);
     }
 
-    // Determine next step and target screen based on choice
     if (typeof target === 'string') {
         targetScreenId = `screen_${target.toLowerCase()}`;
         nextStep = screenStartNodes[target];
@@ -96,28 +79,22 @@ export function handleChoice(target) {
         }
     }
 
-    // IMPORTANT: Update the player's current step state to the chosen next step
     setState('currentPlayerStep', nextStep);
 
-    closeModal(); // Close the choice modal
+    closeModal();
 
-    // Navigate or update markers based on screen change
     if (targetScreenId !== currentScreen) {
         setActiveScreen(targetScreenId);
-        // Modal for the new step will be opened by openNextStepModal below
         openNextStepModal(nextStep);
     } else {
-        // Staying on the same screen: Manually update markers
         updateMarkers(currentAppState.markersData[currentScreen], handleMarkerClick);
-        // Open modal for the new step
         openNextStepModal(nextStep);
     }
 }
 
-// Handles rendering the correct screen based on URL hash or state
 function handleScreenLoadOrHashChange() {
     const hash = window.location.hash;
-    let targetScreenId = hash.substring(1); // Remove #
+    let targetScreenId = hash.substring(1);
 
     const defaultScreen = 'screen_a';
     const state = getState();
@@ -143,7 +120,6 @@ function handleScreenLoadOrHashChange() {
     }
 }
 
-// Initial application setup
 function initializeApp() {
     createModalStructure();
     handleScreenLoadOrHashChange();

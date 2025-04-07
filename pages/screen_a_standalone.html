@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen A (Standalone Preview)</title>
+    <link rel="stylesheet" href="../../src/ui/styles/main.css">
+    <style>
+        .map-container {
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .marker-area {
+            position: relative;
+            background-image: url('../../assets/LDVELH_ScreenA.jpg'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 90%;
+            max-width: 600px;
+            aspect-ratio: 2 / 3;
+            border: 1px solid #ccc;
+            overflow: hidden;
+        }
+
+        .marker {
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="map-container">
+        <div class="marker-area">
+            <div class="marker orangeNumber" style="top: 14%; left: 25%;">B</div>
+            <div class="marker orangeNumber" style="top: 30%; left: 26%;">10</div>
+            <div class="marker orangeNumber" style="top: 57%; left: 48%;">07</div>
+            <div class="marker orangeNumber" style="top: 36%; left: 80%;">12</div>
+
+            <div class="marker greenNumber" style="top: 51%; left: 18%;">09</div>
+            <div class="marker greenNumber" style="top: 48%; left: 31%;">08</div>
+            <div class="marker greenNumber" style="top: 65%; left: 21%;">04</div>
+            <div class="marker greenNumber" style="top: 78%; left: 38%;">03</div>
+            <div class="marker greenNumber" style="top: 89%; left: 48%;">02</div>
+            <div class="marker greenNumber" style="top: 69%; left: 50%;">06</div>
+            <div class="marker greenNumber" style="top: 48%; left: 58%;">11</div>
+            <div class="marker greenNumber" style="top: 58%; left: 81%;">05</div>
+
+        </div>
+    </div>
+</body>
+</html> 

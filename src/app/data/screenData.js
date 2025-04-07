@@ -1,7 +1,4 @@
-// --- Screen Marker Data ---
-
 export const screensData = {
-    // Screen A Data (extracted from screen_a.html)
     'screen_a': [
         { content: '1',  top: '22%', left: '15%', type: 'greenNumber' },
         { content: '2',  top: '55%', left: '25%', type: 'greenNumber' },
@@ -13,11 +10,10 @@ export const screensData = {
         { content: '8',  top: '35%', left: '85%', type: 'greenNumber' },
         { content: '9',  top: '88%', left: '80%', type: 'orangeNumber' },
         { content: '10', top: '12%', left: '30%', type: 'greenNumber' },
-        { content: 'B',  top: '50%', left: '65%', type: 'greenNumber' }
+        { content: 'B',  top: '50%', left: '65%', type: 'navLetter' }
     ],
-    // Screen B Data (extracted from screen_b.html)
     'screen_b': [
-        { content: 'A',  top: '75%', left: '5%',  type: 'greenNumber' },
+        { content: 'A',  top: '75%', left: '5%',  type: 'navLetter' },
         { content: '11', top: '10%', left: '10%', type: 'greenNumber' },
         { content: '12', top: '30%', left: '25%', type: 'greenNumber' },
         { content: '13', top: '50%', left: '15%', type: 'greenNumber' },
@@ -28,11 +24,10 @@ export const screensData = {
         { content: '18', top: '65%', left: '80%', type: 'orangeNumber' },
         { content: '19', top: '85%', left: '60%', type: 'greenNumber' },
         { content: '20', top: '15%', left: '85%', type: 'greenNumber' },
-        { content: 'C',  top: '50%', left: '90%', type: 'greenNumber' }
+        { content: 'C',  top: '50%', left: '90%', type: 'navLetter' }
     ],
-    // Screen C Data (extracted from screen_c.html)
     'screen_c': [
-        { content: 'B',  top: '8%',  left: '90%', type: 'greenNumber' },
+        { content: 'B',  top: '8%',  left: '90%', type: 'navLetter' },
         { content: '21', top: '25%', left: '15%', type: 'greenNumber' },
         { content: '22', top: '45%', left: '30%', type: 'greenNumber' },
         { content: '23', top: '65%', left: '10%', type: 'orangeNumber' },
@@ -43,7 +38,6 @@ export const screensData = {
         { content: '28', top: '75%', left: '60%', type: 'orangeNumber' },
         { content: '29', top: '90%', left: '45%', type: 'greenNumber' },
         { content: '30', top: '5%',  left: '5%',  type: 'greenNumber' },
-        { content: 'D',  top: '50%', left: '50%', type: 'greenNumber' }
+        { content: 'D',  top: '50%', left: '50%', type: 'navLetter' }
     ]
-    // Add screen_d, etc. here
 }; 

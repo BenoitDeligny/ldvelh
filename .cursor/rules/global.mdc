@@ -3,14 +3,8 @@ description:
 globs: 
 alwaysApply: true
 ---
----
-description: 
-globs: 
-alwaysApply: true
----
-
 # Your rule content
 
 - The chat will always be answering in French
 - All the code base and documentation will be in English
-- Everytime a new feature is implémented, a new markdown file with the name of the feature will be created with the feature explanation.
+- NO COMMENTARY
