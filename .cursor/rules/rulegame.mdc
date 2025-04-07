@@ -63,4 +63,53 @@ alwaysApply: false
 *   **Limit:** Can possess a maximum of 3 sacred relics.
 *   **Mechanic:** Roll 1 die. Consult the "GAGNE UNE RELIQUE" table based on the score (1-6) to determine the Relic found.
 *   **Details:** Relics described at the end of the book (stickers). Other relics exist in other Quasar titles.
-*   **Conclusion:** Seems to mark the end of the rules section before the main adventure begins. 
+*   **Conclusion:** Seems to mark the end of the rules section before the main adventure begins.
+
+# Your rule content
+
+- Legend Creation Process:
+    - The player performs the stat rolling process 3 times.
+    - Each roll generates a complete set: Age, Strength, Agility, Perception, and the resulting base FightingPower.
+    - The player then chooses **one** of these three sets for their character.
+
+- Legend has:
+    - Name
+    - Age (between 14 + 1D6, calculated as `14 + rollD6()`)
+    - Strength (should be positif) (`1 + rollD6()` at creation)
+    - Agility (should be positif) (`1 + rollD6()` at creation)
+    - Perception (should be positif) (`1 + rollD6()` at creation)
+    - FightingPower (Base = Strength + Agility + Perception; `+ items bonus + powers bonus` are planned but not implemented yet). Has an initial value (`initialCS`) and a current value (`currentCS`) which decreases with damage.
+    - CombatDice (determined by `initialCS` based on a chart, see Combat section. *Note: The rule stating dice decrease with damage is NOT currently implemented.*)
+- Monster has same as Legend except:
+    - No Age
+    - No Statistics, instead, directly a FightingPower (`initialCS` and `currentCS`).
+    - No Items
+
+
+Fight between Legend and Monster
+
+- Roll initiative:
+    - *Note: Initiative (1D6 + Agility for Legend, FightPower / 3 for Monster) is NOT currently implemented. Player always acts first.*
+- In order:
+    - Player attacks: 
+        - Rolls CombatDice determined by `initialCS` (see below).
+        - In multi-combat, the player chooses and attacks a number of living monsters up to their **Agility** score. (Current implementation targets the first *N* monsters).
+        - Damage is applied to each targeted monster's `currentCS`.
+    - If target(s) still alive, they fight back. Each living monster attacks the player individually.
+    - Until the Player's `currentCS` is 0 OR all Monsters' `currentCS` are 0.
+
+- CombatDice determination (Implemented rule):
+    - The number of D6 to roll for damage depends on the attacker's **`initialCS`**.
+    - Separate lookup tables exist for Legends and Monsters.
+    - If the table result is 0 dice, 1 point of damage is inflicted minimum.
+    - *Note: The rule "the number of FightingDice will decrease as the Legend (or Monster) will be damaged" is NOT currently implemented.*
+
+- Fleeing (Implemented rule):
+    - Player rolls 2D6 + Agility.
+    - Compare result to the `currentCS` of the opponent.
+    - In multi-combat, compare to the **sum of `currentCS`** of all living opponents.
+    - If `roll > opponent(s) CS`, flee succeeds.
+    - If `roll <= opponent(s) CS`, flee fails, and the opponent(s) attack.
+
+
+# Frontend Progression Rules 

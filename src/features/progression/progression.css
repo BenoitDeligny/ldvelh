@@ -1,10 +1,6 @@
-body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
+/* Styles for the main progression map application */
+
+/* These styles are specific to the marker map and modal */
 
 .map-container {
     position: relative;
@@ -62,7 +58,7 @@ body, html {
 }
 
 #modal-overlay {
-    display: none;
+    /* display: none;  Managed by JS */
     position: fixed;
     z-index: 100;
     left: 0;
@@ -71,14 +67,14 @@ body, html {
     height: 100%;
     overflow: auto;
     background-color: rgba(0,0,0,0.6);
-    display: flex;
+    display: flex; /* Use flex to center content */
     justify-content: center;
     align-items: center;
 }
 
 #modal-content {
     background-color: #fefefe;
-    margin: auto;
+    margin: auto; /* Centered by flex parent now */
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
@@ -102,4 +98,47 @@ body, html {
 #modal-close:focus {
     color: black;
     text-decoration: none;
+}
+
+/* Styles for content within the modal (example) */
+#modal-dynamic-content h2 {
+     margin-top: 0;
+     color: #333;
+     border-bottom-color: #ddd;
+}
+
+#modal-dynamic-content p.modal-description {
+    margin-bottom: 15px;
+}
+
+#modal-dynamic-content ul.modal-choices {
+    list-style: none;
+    padding: 0;
+}
+
+#modal-dynamic-content ul.modal-choices li {
+    margin-bottom: 10px;
+}
+
+#modal-dynamic-content button.choice-button {
+     /* Inherit from global .action-button ? Or define specific styles */
+     display: block;
+     width: 100%;
+     padding: 10px 15px;
+     background-color: #3a7a3a; /* Player Green */
+     color: white;
+     border: none;
+     border-radius: 4px;
+     text-align: center;
+     font-size: 1em;
+     cursor: pointer;
+}
+
+#modal-dynamic-content button.choice-button:hover:not(:disabled) {
+     background-color: #2a6a2a; /* Darker Player Green */
+}
+
+#modal-dynamic-content button.choice-button:disabled {
+     background-color: #ccc;
+     cursor: not-allowed;
 }

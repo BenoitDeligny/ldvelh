@@ -1,5 +1,5 @@
-import { screensData } from '../data/screenData.js';
-import { markerAreaSelector } from './domElements.js';
+import { screensData } from './progression.screens.js';
+import { markerAreaSelector } from './progression.dom.js';
 import { getState } from '../core/state.js';
 // Re-import progressionData if needed for isCombatMarker check
 // import { progressionData } from '../data/progressionData.js'; 
@@ -87,4 +87,4 @@ export function updateMarkers(markersDataForScreen, clickHandler) {
 
         container.appendChild(markerElement);
     });
-}
+} 

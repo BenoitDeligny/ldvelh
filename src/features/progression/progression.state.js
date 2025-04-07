@@ -1,4 +1,4 @@
-import { screensData } from '../data/screenData.js';
+import { screensData } from './progression.screens.js';
 
 const STATE_STORAGE_KEY = 'gameState';
 const CHECKSUM_SECRET_KEY = 'LdV3lhS3cr3tK3y!';
@@ -124,6 +124,14 @@ export function addCompletedCombat(step) {
     if (!currentState.completedCombats.has(step)) {
         currentState.completedCombats.add(step);
         saveStateToLocalStorage();
+    }
+}
+
+export function loadInitialData() {
+    loadStateFromLocalStorage();
+    if (!currentState.markersData) {
+        console.warn("State: markersData missing after load, initializing from defaults.");
+        currentState.markersData = screensData;
     }
 }
 

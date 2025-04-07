@@ -1,0 +1,101 @@
+/* Global Styles */
+
+/* Basic Reset & Body Defaults */
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Common Container Style */
+.main-content-container {
+    max-width: 800px; /* Default max-width, can be overridden */
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Common Heading Styles */
+h1 {
+    text-align: center;
+    color: #444; /* Neutral default color */
+    margin-top: 0; /* Assuming it's often the first element */
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #777;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+/* Common Button Base Styles (can be extended) */
+button.action-button {
+    display: inline-block; /* Allow side-by-side buttons if needed */
+    padding: 10px 15px;
+    background-color: #6c757d; /* Grey from dev_nav */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+button.action-button:hover:not(:disabled) {
+    background-color: #5a6268; /* Darker grey from dev_nav hover */
+}
+
+button.action-button:disabled {
+    background-color: #aaa; /* Keep light grey background */
+    color: #333; /* Use darker text color for better contrast */
+    cursor: not-allowed;
+}
+
+/* Common Combat Log Styles */
+.combat-log-container {
+    margin-top: 30px;
+    background-color: #eef;
+    border: 1px solid #ccd;
+    border-radius: 5px;
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.combat-log-container h2 {
+    margin-top: 0; 
+}
+
+.combat-log-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.combat-log-container li {
+    padding: 5px 0;
+    border-bottom: 1px dotted #ccc;
+}
+
+.combat-log-container li:last-child {
+    border-bottom: none;
+}
+
+.log-player { color: #2a6a2a; font-weight: bold; }
+.log-monster { color: #a32424; font-weight: bold; }
+.log-system { color: #555; font-style: italic; }
+.log-result { font-weight: bold; } 

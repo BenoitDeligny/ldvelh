@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combat 1v1 - LDVELH</title>
+    <link rel="stylesheet" href="../../shared/global.css">
+    <link rel="stylesheet" href="combat-1v1.css">
+</head>
+<body>
+    <header>
+        <h1 class="combat-title">Combat 1 contre 1</h1>
+        <!-- Optional: Add navigation back to main menu or other sections if needed -->
+    </header>
+
+    <main class="main-content-container combat-container">
+        <div class="combatants-display">
+            <div class="combatant player-card">
+                <h2><span id="player-name">Nom Joueur</span></h2>
+                <p>FC Initiale: <span id="player-cs-initial">--</span></p>
+                <p>FC Actuelle: <span id="player-cs-current">--</span></p>
+            </div>
+
+            <div class="vs">
+                VS
+            </div>
+
+            <div class="combatant monster-card">
+                <h2><span id="monster-name">Nom Monstre</span></h2>
+                <p>FC Initiale: <span id="monster-cs-initial">--</span></p>
+                <p>FC Actuelle: <span id="monster-cs-current">--</span></p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="attack-button" class="action-button">Attaquer</button>
+            <button id="flee-button" class="action-button">Fuir</button>
+        </div>
+
+        <div class="combat-log-container">
+            <h2>Journal de Combat</h2>
+            <ul id="log-list"></ul>
+        </div>
+    </main>
+
+    <script src="combat-1v1.controller.js" type="module"></script>
+</body>
+</html> 

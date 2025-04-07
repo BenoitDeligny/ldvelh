@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combat Multi - LDVELH</title>
+    <link rel="stylesheet" href="../../shared/global.css"> <!-- Corrected path -->
+    <link rel="stylesheet" href="combat-multi.css">
+</head>
+<body>
+    <header>
+        <h1 class="combat-title">Combat 1 contre N</h1>
+    </header>
+
+    <main class="main-content-container combat-container-multi"> <!-- Use common container + specific -->
+        <div class="combatants-display-multi">
+            <div class="player-section"> <!-- New wrapper for player title + info -->
+                <h2>Votre Légende</h2> 
+                <div id="player-info">
+                    <!-- Removed H2 from here -->
+                    <p><span id="player-name">Nom Joueur</span> (Adresse: <span id="player-dexterity">X</span>)</p>
+                    <p>FC Initiale: <span id="player-cs-initial">--</span></p>
+                    <p>FC Actuelle: <span id="player-cs-current">--</span></p>
+                </div>
+            </div>
+
+            <div class="vs-multi">
+                CONTRE
+            </div>
+
+            <div id="monsters-info">
+                <h2>Adversaires</h2>
+                <ul id="monster-list">
+                    <!-- Monster list will be populated here -->
+                </ul>
+            </div>
+        </div>
+
+        <div class="actions-multi">
+            <button id="attack-button" class="action-button">Attaquer (<span id="player-dexterity-display">X</span> cible(s))</button> <!-- Added common class -->
+            <button id="flee-button" class="action-button">Fuir</button> <!-- Added common class -->
+        </div>
+
+        <div class="combat-log-container"> <!-- Use common log container class -->
+            <h2>Journal de Combat</h2>
+            <ul id="log-list"></ul>
+        </div>
+    </main>
+
+    <script src="combat-multi.controller.js" type="module"></script> <!-- Updated path/filename -->
+</body>
+</html> 

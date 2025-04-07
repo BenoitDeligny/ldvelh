@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Création de Légende - LDVELH Rules</title>
+    <link rel="stylesheet" href="../../shared/global.css">
+    <link rel="stylesheet" href="character-creation.css">
+</head>
+<body>
+    <main class="main-content-container char-creation">
+        <h1 class="char-creation-title">Créez votre Légende</h1>
+
+        <section>
+            <h2>Entrez votre nom</h2>
+            <div class="form-group">
+                <label for="char-name">Nom de la Légende :</label>
+                <input type="text" id="char-name" name="char-name" required>
+            </div>
+        </section>
+
+        <section>
+            <h2>Lancez vos caractéristiques</h2>
+            <button id="roll-button" class="action-button">Lancer les Caractéristiques</button>
+
+            <div class="stats-options">
+                <!-- Option 1 -->
+                <div class="stats-option-card">
+                    <h3>Option 1</h3>
+                    <div class="stats-group">
+                        <p>Force: <span class="stat-value" id="power-stat-1">?</span></p>
+                        <p>Adresse: <span class="stat-value" id="dexterity-stat-1">?</span></p>
+                        <p>Perception: <span class="stat-value" id="perception-stat-1">?</span></p>
+                        <p>Age: <span class="stat-value" id="age-stat-1">?</span></p>
+                        <p><strong>Force Combat:</strong> <span class="stat-value" id="combat-strength-1">?</span></p>
+                    </div>
+                    <button class="select-button action-button" data-option="1" disabled>Choisir cette option</button>
+                </div>
+                <!-- Option 2 -->
+                <div class="stats-option-card">
+                    <h3>Option 2</h3>
+                     <div class="stats-group">
+                        <p>Force: <span class="stat-value" id="power-stat-2">?</span></p>
+                        <p>Adresse: <span class="stat-value" id="dexterity-stat-2">?</span></p>
+                        <p>Perception: <span class="stat-value" id="perception-stat-2">?</span></p>
+                        <p>Age: <span class="stat-value" id="age-stat-2">?</span></p>
+                        <p><strong>Force Combat:</strong> <span class="stat-value" id="combat-strength-2">?</span></p>
+                    </div>
+                   <button class="select-button action-button" data-option="2" disabled>Choisir cette option</button>
+                </div>
+                <!-- Option 3 -->
+                 <div class="stats-option-card">
+                    <h3>Option 3</h3>
+                     <div class="stats-group">
+                        <p>Force: <span class="stat-value" id="power-stat-3">?</span></p>
+                        <p>Adresse: <span class="stat-value" id="dexterity-stat-3">?</span></p>
+                        <p>Perception: <span class="stat-value" id="perception-stat-3">?</span></p>
+                        <p>Age: <span class="stat-value" id="age-stat-3">?</span></p>
+                        <p><strong>Force Combat:</strong> <span class="stat-value" id="combat-strength-3">?</span></p>
+                    </div>
+                    <button class="select-button action-button" data-option="3" disabled>Choisir cette option</button>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <button id="create-button" class="action-button" disabled>Créer le personnage</button>
+        </section>
+    </main>
+
+    <script src="character-creation.controller.js" type="module"></script>
+</body>
+</html> 

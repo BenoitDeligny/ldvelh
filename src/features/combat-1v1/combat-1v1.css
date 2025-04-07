@@ -1,0 +1,120 @@
+/* Specific styles for 1v1 Combat */
+
+/* Specific h1 color */
+h1.combat-title {
+    color: #b33434;
+}
+
+/* Layout for combatants */
+.combatants-display {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    gap: 20px; 
+    margin-bottom: 30px; 
+    border-bottom: 1px dashed #ccc; 
+    padding-bottom: 20px; 
+}
+
+.combatant { 
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    flex-basis: 40%; 
+    flex-shrink: 0;
+}
+
+.combatant.player-card h2 {
+    color: #3a7a3a;
+    margin-top: 0;
+    border: none;
+}
+
+.combatant.monster-card h2 {
+    color: #b33434;
+    margin-top: 0;
+     border: none;
+}
+
+.vs {
+    text-align: center; 
+    font-size: 1.5em; 
+    font-weight: bold;
+    color: #555;
+    align-self: center; 
+    flex-shrink: 0;
+}
+
+/* Actions section specific style if needed */
+.actions {
+    text-align: center;
+    margin: 25px 0;
+    padding-top: 20px;
+    border-top: 1px dashed #ccc;
+}
+
+/* Buttons inherit .action-button */
+/* #attack-button color rule removed - inherits grey */
+
+#flee-button {
+     background-color: #ffc107; /* Yellow for flee */
+     color: #333;
+}
+#flee-button:hover:not(:disabled) {
+     background-color: #e0a800;
+}
+
+/* Combat log uses global style .combat-log-container */
+
+/* Styles for the main content area generated in index.html */
+main.combat-container {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles specific to h2 within the combat container */
+.combat-container h2 {
+    color: #777;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+/* Target the correct log container class */
+.combat-log-container {
+    margin-top: 30px;
+    background-color: #eef;
+    border: 1px solid #ccd;
+    border-radius: 5px;
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Target ul/li within the correct container */
+.combat-log-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.combat-log-container li {
+    padding: 5px 0;
+    border-bottom: 1px dotted #ccc;
+}
+
+.combat-log-container li:last-child {
+    border-bottom: none;
+}
+
+.log-player { color: #2a6a2a; font-weight: bold; }
+.log-monster { color: #a32424; font-weight: bold; }
+.log-system { color: #555; font-style: italic; }
+.log-result { font-weight: bold; } 
