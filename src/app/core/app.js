@@ -71,6 +71,7 @@ export function handleChoice(target) {
     const currentAppState = getState();
     const choiceOriginStep = currentAppState.modalContent?.step;
     const currentScreen = currentAppState.currentScreen;
+    let isTargetScreenLetter = false;
 
     if (choiceOriginStep !== undefined) {
         addVisitedStep(choiceOriginStep);
@@ -79,6 +80,7 @@ export function handleChoice(target) {
     }
 
     if (typeof target === 'string') {
+        isTargetScreenLetter = true;
         targetScreenId = `screen_${target.toLowerCase()}`;
         nextStep = screenStartNodes[target];
         if (nextStep === undefined) {
@@ -101,9 +103,11 @@ export function handleChoice(target) {
 
     if (targetScreenId !== currentScreen) {
         setActiveScreen(targetScreenId);
-        openNextStepModal(nextStep);
-    } else {
+    } else if (!isTargetScreenLetter) {
         updateMarkers(currentAppState.markersData[currentScreen], handleMarkerClick);
+    }
+
+    if (!isTargetScreenLetter) {
         openNextStepModal(nextStep);
     }
 }
