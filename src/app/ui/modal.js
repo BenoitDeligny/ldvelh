@@ -1,6 +1,7 @@
 import { modalOverlaySelector, modalContentSelector, closeModalButtonSelector } from './domElements.js';
 import { getState, setState } from '../core/state.js';
-import { handleChoice } from '../core/app.js';
+import { handleChoice, handleMarkerClick } from '../core/app.js';
+import { updateMarkers } from './markers.js';
 
 export function createModalStructure() {
     if (document.querySelector(modalOverlaySelector)) {
@@ -45,23 +46,42 @@ export function openModal() {
         return;
     }
 
+    let isCombatStep = false;
+    if (modalData.type === 'progression' && modalData.step === 7) {
+        setState('isCombatActive', true);
+        isCombatStep = true;
+    }
+
     let dynamicHTML = '';
 
     if (modalData.type === 'progression') {
         dynamicHTML += `<h2>Étape ${modalData.step}</h2>`;
         if (modalData.text) {
-            dynamicHTML += `<p class="modal-description">${modalData.text}</p>`;
+            dynamicHTML += `<p class="modal-description">${modalData.text}</p><hr>`;
         }
+
+        dynamicHTML += `<div class="original-choices-container" ${isCombatStep ? 'style="opacity: 0.5;"' : ''}>`;
         if (modalData.choices && modalData.choices.length > 0) {
-            dynamicHTML += `<p>Vous pouvez aller à :</p><ul class="modal-choices">`;
+            dynamicHTML += `<p>Choix possibles :</p><ul class="modal-choices">`;
             modalData.choices.forEach((choice, index) => {
-                const buttonText = typeof choice.target === 'string' ? `Écran ${choice.target}` : `Numéro ${choice.target}`;
-                dynamicHTML += `<li><button class="choice-button" data-choice-target='${JSON.stringify(choice.target)}' data-choice-index="${index}">${buttonText}</button></li>`;
+                const targetRepresentation = typeof choice.target === 'string' ? `Aller à l\'Écran ${choice.target}` : `Aller au Numéro ${choice.target}`;
+                const buttonText = targetRepresentation;
+                const disabledAttribute = isCombatStep ? 'disabled' : '';
+                dynamicHTML += `<li><button class="choice-button original-choice-button" data-choice-target='${JSON.stringify(choice.target)}' data-choice-index="${index}" ${disabledAttribute}>${buttonText}</button></li>`;
             });
-            dynamicHTML += `</ul>`;
+            dynamicHTML += `</ul></div>`;
         } else {
-            dynamicHTML += `<p>Il n'y a pas d'autres choix à partir d'ici.</p>`;
+            dynamicHTML += `<p>Il n\'y a pas de choix de progression ici.</p></div>`;
         }
+
+        if (isCombatStep) {
+            dynamicHTML += `<hr><div class="combat-actions-container">`;
+            dynamicHTML += `<p>Actions immédiates :</p><ul class="modal-choices combat-actions">`;
+            dynamicHTML += `<li><button class="choice-button flee-combat-button">Fuir le combat</button></li>`;
+            dynamicHTML += `<li><button class="choice-button engage-combat-button">Combattre</button></li>`;
+            dynamicHTML += `</ul></div>`;
+        }
+
     } else if (modalData.type === 'info') {
         dynamicHTML += `<p>${modalData.message}</p>`;
     } else {
@@ -70,14 +90,70 @@ export function openModal() {
 
     modalDynamicContentElement.innerHTML = dynamicHTML;
 
-    if (modalData.type === 'progression' && modalData.choices && modalData.choices.length > 0) {
-        modalDynamicContentElement.querySelectorAll('.choice-button').forEach(button => {
-            const target = JSON.parse(button.dataset.choiceTarget);
-            button.addEventListener('click', () => {
-                handleChoice(target);
+    setTimeout(() => {
+        const fleeCombatButton = modalDynamicContentElement.querySelector('.flee-combat-button');
+        const engageCombatButton = modalDynamicContentElement.querySelector('.engage-combat-button');
+        const originalChoiceButtons = modalDynamicContentElement.querySelectorAll('.original-choice-button');
+
+        if (fleeCombatButton) {
+            fleeCombatButton.addEventListener('click', () => {
+                setState('isCombatActive', false);
+                closeModal();
+                const currentState = getState();
+                setTimeout(() => {
+                    const updatedState = getState();
+                     if (updatedState.markersData && updatedState.markersData[updatedState.currentScreen]) {
+                        updateMarkers(updatedState.markersData[updatedState.currentScreen], handleMarkerClick);
+                     }
+                }, 0);
             });
+        }
+
+        if (engageCombatButton) {
+            engageCombatButton.addEventListener('click', () => {
+                const combatActionsContainer = modalDynamicContentElement.querySelector('.combat-actions-container');
+                const originalChoicesContainer = modalDynamicContentElement.querySelector('.original-choices-container');
+
+                if (combatActionsContainer) {
+                    combatActionsContainer.style.display = 'none';
+                } else {
+                    console.error("[Modal Error] Combat actions container not found!");
+                }
+                if (originalChoicesContainer) {
+                    originalChoicesContainer.style.opacity = '1';
+                }
+
+                originalChoiceButtons.forEach((btn, index) => {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                });
+            });
+        }
+
+        originalChoiceButtons.forEach((button, index) => {
+            const targetJson = button.dataset.choiceTarget;
+            if (!targetJson) {
+                console.error(`[Modal Error] Original choice button ${index} missing data-choice-target`);
+                return;
+            }
+            try {
+                 const target = JSON.parse(targetJson);
+                 button.addEventListener('click', () => {
+                    if (button.disabled) {
+                        console.warn("[Modal Warning] Clicked button is disabled, ignoring.");
+                        return;
+                    }
+                    if (getState().isCombatActive) {
+                        setState('isCombatActive', false);
+                    }
+                    handleChoice(target);
+                 });
+            } catch (e) {
+                console.error(`[Modal Error] Error parsing target for original choice button ${index}: ${targetJson}`, e);
+            }
         });
-    }
+
+    }, 0);
 
     modal.style.display = 'flex';
     setState('isModalOpen', true);

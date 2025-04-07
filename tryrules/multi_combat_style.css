@@ -1,0 +1,139 @@
+/* Based on combat_style.css with adaptations */
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    max-width: 800px; /* Wider for potentially more info */
+    margin: auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #b33434;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #777;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.combatants-multi {
+    display: flex;
+    justify-content: space-between; /* Space between player and monster group */
+    align-items: flex-start;
+    margin-bottom: 30px;
+    border-bottom: 2px dashed #ccc;
+    padding-bottom: 20px;
+    gap: 20px; /* Add gap between sections */
+}
+
+.combatant.player {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    flex-basis: 40%; /* Adjust width */
+}
+
+.combatant.player h2 {
+    color: #3a7a3a;
+}
+
+.monster-group {
+    flex-basis: 55%; /* Adjust width */
+}
+
+.monster-group h2 {
+    color: #b33434;
+}
+
+#monster-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#monster-list li {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #fdf5f5; /* Lighter red background */
+}
+
+#monster-list .monster-name {
+    font-weight: bold;
+    color: #a32424;
+    display: block; /* Ensure name is on its own line */
+    margin-bottom: 5px;
+}
+
+.actions {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.actions button {
+    padding: 10px 15px;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin: 0 10px;
+    transition: background-color 0.3s ease;
+}
+
+.actions button:hover {
+    background-color: #333;
+}
+
+.actions button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+.combat-log {
+    margin-top: 20px;
+    background-color: #eef;
+    border: 1px solid #ccd;
+    border-radius: 5px;
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.combat-log ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.combat-log li {
+    padding: 5px 0;
+    border-bottom: 1px dotted #ccc;
+}
+
+.combat-log li:last-child {
+    border-bottom: none;
+}
+
+.log-player { color: #2a6a2a; font-weight: bold; }
+.log-monster { color: #a32424; font-weight: bold; }
+.log-system { color: #555; font-style: italic; }
+.log-result { font-weight: bold; } 

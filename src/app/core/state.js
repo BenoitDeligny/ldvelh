@@ -9,7 +9,9 @@ const defaultState = {
     markersData: screensData,
     isModalOpen: false,
     modalContent: null,
-    visitedSteps: new Set()
+    isCombatActive: false,
+    visitedSteps: new Set(),
+    completedCombats: new Set()
 };
 
 let currentState = { ...defaultState };
@@ -27,10 +29,12 @@ function simpleHash(str) {
 
 function calculateChecksum(dataToSave, secret) {
     const sortedVisited = Array.from(dataToSave.visitedSteps || []).sort();
+    const sortedCombats = Array.from(dataToSave.completedCombats || []).sort().map(Number);
     const dataString = JSON.stringify({
         cs: dataToSave.currentScreen || '',
         cp: dataToSave.currentPlayerStep || 0,
-        vs: sortedVisited
+        vs: sortedVisited,
+        cc: sortedCombats
     }) + secret;
     return simpleHash(dataString);
 }
@@ -45,7 +49,8 @@ function loadStateFromLocalStorage() {
             const dataToCheck = {
                 currentScreen: savedState.currentScreen,
                 currentPlayerStep: savedState.currentPlayerStep,
-                visitedSteps: savedState.visitedSteps
+                visitedSteps: savedState.visitedSteps,
+                completedCombats: savedState.completedCombats
             };
             const calculatedChecksum = calculateChecksum(dataToCheck, CHECKSUM_SECRET_KEY);
 
@@ -54,22 +59,23 @@ function loadStateFromLocalStorage() {
                     ...defaultState,
                     currentScreen: savedState.currentScreen || defaultState.currentScreen,
                     currentPlayerStep: savedState.currentPlayerStep || defaultState.currentPlayerStep,
-                    visitedSteps: new Set(savedState.visitedSteps || [])
+                    visitedSteps: new Set(savedState.visitedSteps || []),
+                    completedCombats: new Set(savedState.completedCombats || [])
                 };
                 console.log("Game state loaded and verified.");
             } else {
                 console.warn("Checksum mismatch or missing! Resetting game state.");
                 localStorage.removeItem(STATE_STORAGE_KEY);
-                currentState = { ...defaultState, visitedSteps: new Set() };
+                currentState = { ...defaultState, visitedSteps: new Set(), completedCombats: new Set() };
             }
         } else {
-            currentState = { ...defaultState, visitedSteps: new Set() };
+            currentState = { ...defaultState, visitedSteps: new Set(), completedCombats: new Set() };
             console.log("No saved game state found, initializing.");
         }
     } catch (error) {
         console.error('Error loading/verifying state:', error);
         localStorage.removeItem(STATE_STORAGE_KEY);
-        currentState = { ...defaultState, visitedSteps: new Set() };
+        currentState = { ...defaultState, visitedSteps: new Set(), completedCombats: new Set() };
     }
 }
 
@@ -78,7 +84,8 @@ function saveStateToLocalStorage() {
         const stateToSave = {
             currentScreen: currentState.currentScreen,
             currentPlayerStep: currentState.currentPlayerStep,
-            visitedSteps: Array.from(currentState.visitedSteps)
+            visitedSteps: Array.from(currentState.visitedSteps),
+            completedCombats: Array.from(currentState.completedCombats || new Set())
         };
         stateToSave.chk = calculateChecksum(stateToSave, CHECKSUM_SECRET_KEY);
         localStorage.setItem(STATE_STORAGE_KEY, JSON.stringify(stateToSave));
@@ -106,6 +113,16 @@ export function setState(key, value) {
 
 export function addVisitedStep(step) {
     if (currentState.visitedSteps.add(step)) {
+        saveStateToLocalStorage();
+    }
+}
+
+export function addCompletedCombat(step) {
+    if (!currentState.completedCombats) {
+        currentState.completedCombats = new Set();
+    }
+    if (!currentState.completedCombats.has(step)) {
+        currentState.completedCombats.add(step);
         saveStateToLocalStorage();
     }
 }

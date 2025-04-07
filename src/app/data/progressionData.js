@@ -27,7 +27,7 @@ export const progressionData = {
   },
   7: { 
       text: "Prenant ton élan, tu traverses le mur de flammes. Miracle, tu ne ressens aucune brûlure. Devant toi, sur une grosse pierre plate repose une femme. Soudain un grondement retentit. Du sol jaillissent trois squelettes de guerriers vikings qui se ruent sur toi. Pour fuir en retraitant par les flammes, tu dois faire 8 ou plus [Bonus: Adresse + Sport]. Si tu échoues ou si tu choisis de combattre, suis les règles p.12.",
-      choices: [{ text: "Tenter de fuir", target: 'A' }, { text: "Combattre (si victorieux)", target: 13 }] 
+      choices: [{ target: 'A' }, { target: 13 }] 
   },
   8: { 
       text: "Le sentier serpente au pied d'un étrange massif montagneux. Au milieu de la falaise rocheuse, tu distingues l'entrée d'une caverne que tu ne peux atteindre qu'en escaladant la paroi.",

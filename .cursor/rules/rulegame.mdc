@@ -1,0 +1,66 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Game Rules Summary (Based on Provided Images)
+
+## 1. How to Play (p10 - Solo Quasar)
+
+*   **Game Type:** Interactive solo adventure. Requires pencil, eraser, two dice, character sheet (p.169). Combat result table on bookmark (p.173).
+*   **Character:** You are a Legend.
+*   **Core Attributes (Qualities):**
+    *   **Power (Puissance):** Measures strength and physical endurance. Roll 1 die + 1 at creation.
+    *   **Dexterity (Adresse):** Corresponds to speed and complex action skill. Roll 1 die + 1 at creation.
+    *   **Perception:** Governs senses (sight, hearing, smell, touch, taste) and intuition. Roll 1 die + 1 at creation.
+*   **Age:** Roll 1 die + 11 at creation.
+
+## 2. Your Adventure (p11 - Asgard)
+
+*   **Progression:** Read descriptive paragraphs (§). Choices are indicated in *italics* after the § symbol.
+*   **Navigation:** Choices lead to other paragraphs (numbers) or graphical screens (letters, e.g., Screen G).
+*   **Skill Checks:** Required for certain actions (e.g., "Climb the mountain"). Roll dice (typically 2D6?) + relevant Quality score (+ Atout bonus if applicable) against a target number (e.g., 9+). Bonuses are indicated in parentheses.
+*   **Progression Rule:** Cannot access numbered paragraphs directly. Must follow the path indicated by **blue numbers** (specific rule to implement/consider for the frontend).
+*   **Graphical Screens:** Represent a specific location. Choices are made based on numbered paragraphs available on that screen.
+
+## 3. Combat - Basics (p12 - Solo Quasar)
+
+*   **Encounters:** You will fight creatures. Sometimes cunning or strength outside combat is enough.
+*   **Adversaries:** Have **Combat Strength (Force de combat)** and equipment (Example: Skeleton Viking - Strength 7, Axe [Power +2]).
+*   **Player Attack:** Can fight unarmed or with a weapon (only one weapon + shield at a time). Armor bonus and shield bonus add to Combat Strength.
+*   **Attack Roll:** Roll dice (likely 2D6?) + Atouts + Power bonus. Subtract adversary's Combat Strength.
+*   **Result:** Consult the **Combat Table (Tableau de combat)** (p. 173) with the result to see the outcome.
+
+## 4. Combat - Advanced & Rewards Intro (p13 - Asgard)
+
+*   **Multiple Adversaries:** Can fight as many adversaries as your Dexterity score allows simultaneously. Roll once for all adversaries, subtracting their combined Combat Strength score. Important adversaries (higher Combat Strength than your Dexterity) attack one by one in turn.
+*   **Fleeing Combat:** Dangerous maneuver. Roll dice + Dexterity. Score must be higher than the Combat Strength of your adversary(ies). Success allows choosing a new destination from text options. Failure means combat continues.
+*   **Rewards (Gains):** After successful actions/combat, signs (§?) indicate rewards. Possible gains include:
+    *   Quality Increase
+    *   New Power
+    *   Sacred Relic
+    *   Knowledge
+
+## 5. Treasure Tables - Quality Increase (p14 - Solo Quasar)
+
+*   **Reward Trigger:** A specific sign (§?) at the end of a paragraph indicates consulting a treasure/reward table.
+*   **Quality Increase:** Roll 3 dice. Consult the "AUGMENTE TES QUALITÉS" table based on the score (3-18) to determine which Quality(ies) increase and by how much.
+
+## 6. Gaining Asgardian Power (p15 - Asgard)
+
+*   **Trigger:** Likely indicated by a specific sign/event.
+*   **Mechanic:** Roll 2 dice. Consult the "GAGNE UN POUVOIR" table based on the score (2-12) to determine the Power gained and its effect. If power is already possessed, roll on the Qualities table instead (needs clarification - p14 table?).
+*   **Details:** Powers are described at the end of the book (stickers).
+
+## 7. Gaining Asgardian Knowledge (p16 - Solo Quasar)
+
+*   **Trigger:** Likely indicated by a specific sign/event.
+*   **Mechanic:** Roll 2 dice. Consult the "GAGNE UNE CONNAISSANCE" table based on the score (2-12) to determine the Knowledge gained and its effect. New knowledge grants a +1 bonus; gaining the same knowledge again increases the bonus by 1 each time.
+
+## 8. Finding a Sacred Relic of the Aesir (p17 - Asgard)
+
+*   **Trigger:** Rare event.
+*   **Limit:** Can possess a maximum of 3 sacred relics.
+*   **Mechanic:** Roll 1 die. Consult the "GAGNE UNE RELIQUE" table based on the score (1-6) to determine the Relic found.
+*   **Details:** Relics described at the end of the book (stickers). Other relics exist in other Quasar titles.
+*   **Conclusion:** Seems to mark the end of the rules section before the main adventure begins. 

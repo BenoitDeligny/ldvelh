@@ -1,84 +1,11 @@
 import { screensData } from '../data/screenData.js';
 import { markerAreaSelector } from './domElements.js';
 import { getState } from '../core/state.js';
+// Re-import progressionData if needed for isCombatMarker check
+// import { progressionData } from '../data/progressionData.js'; 
 
-export function getMarkerType(markerElement) {
-    const content = markerElement.textContent;
-    const isLetter = isNaN(parseInt(content));
-    const isOrange = markerElement.classList.contains('marker-letter');
-    const isBackNav = markerElement.classList.contains('marker-nav-back');
-
-    if (isBackNav) return 'backNav';
-    if (isLetter && isOrange) return 'forwardNavLetter';
-    if (!isLetter && isOrange) return 'orangeNumber';
-    if (!isLetter && !isOrange) return 'greenNumber';
-    return 'unknown';
-}
-
-export function generateMarkersForScreen(screenId) {
-    const markerArea = document.querySelector(markerAreaSelector);
-    if (!markerArea) {
-        console.error('Marker area not found on page.');
-        return;
-    }
-
-    markerArea.innerHTML = '';
-
-    const screenMarkersData = screensData[screenId];
-    if (!screenMarkersData) {
-        console.error(`No data found for screen: ${screenId}`);
-        return;
-    }
-
-    screenMarkersData.forEach(markerData => {
-        const markerElement = document.createElement('div');
-        markerElement.classList.add('marker');
-        markerElement.style.top = markerData.top;
-        markerElement.style.left = markerData.left;
-        markerElement.textContent = markerData.content;
-
-        switch (markerData.type) {
-            case 'orangeNumber':
-            case 'forwardNavLetter':
-                markerElement.classList.add('marker-letter');
-                break;
-            case 'backNav':
-                markerElement.classList.add('marker-nav-back');
-                break;
-        }
-
-        markerArea.appendChild(markerElement);
-    });
-
-    return markerArea.querySelectorAll('.marker');
-}
-
-export function enableOrangeNumberMarkers() {
-    document.querySelectorAll('.marker').forEach(marker => {
-        const isLetter = isNaN(parseInt(marker.textContent));
-        if (marker.classList.contains('marker-letter') && !isLetter) {
-            marker.classList.add('enabled');
-        }
-    });
-}
-
-export function initializeMarkerVisualState(currentScreenId) {
-    const isCurrentScreenUnlocked = isScreenUnlocked(currentScreenId);
-
-    document.querySelectorAll('.marker').forEach(marker => {
-        const type = getMarkerType(marker);
-
-        if (type === 'forwardNavLetter') {
-            marker.classList.add('enabled');
-        } else if (type === 'orangeNumber' && isCurrentScreenUnlocked) {
-            marker.classList.add('enabled');
-        }
-    });
-}
-
-function handleStaticInfoClick(markerContent, clickHandler) {
-    clickHandler(markerContent, 'static_info');
-}
+// Removed unused functions: getMarkerType, generateMarkersForScreen,
+// enableOrangeNumberMarkers, initializeMarkerVisualState, handleStaticInfoClick
 
 export function updateMarkers(markersDataForScreen, clickHandler) {
     const container = document.querySelector(markerAreaSelector);
@@ -91,7 +18,9 @@ export function updateMarkers(markersDataForScreen, clickHandler) {
     const appState = getState();
     const currentStep = appState.currentPlayerStep;
     const visitedSteps = appState.visitedSteps;
-
+    const isCombatActive = appState.isCombatActive;
+    const completedCombats = appState.completedCombats;
+    
     markersDataForScreen.forEach(markerData => {
         const markerElement = document.createElement('div');
         markerElement.textContent = markerData.content;
@@ -103,46 +32,58 @@ export function updateMarkers(markersDataForScreen, clickHandler) {
         const markerNumber = parseInt(markerContent, 10);
         const isNumeric = !isNaN(markerNumber);
         const isCurrentActiveStep = isNumeric && markerNumber === currentStep;
+        const isThisCombatCompleted = isNumeric && completedCombats.has(markerNumber);
+
+        if (isThisCombatCompleted) {
+            markerElement.classList.add('marker--combat-completed');
+        }
 
         let isClickableForProgression = false;
         let isClickableForNavigation = false;
 
         switch (markerData.type) {
             case 'greenNumber':
-                markerElement.classList.add('marker--active');
-                isClickableForProgression = true;
-                break;
+                 if (!isCombatActive) {
+                     markerElement.classList.add('marker--active');
+                     isClickableForProgression = true; 
+                 } else {
+                     markerElement.classList.add('marker--inactive');
+                 }
+                 break;
             case 'orangeNumber':
-                if (isCurrentActiveStep || visitedSteps.has(markerNumber)) {
-                    markerElement.classList.add('marker--active');
-                    isClickableForProgression = true;
-                } else {
-                    markerElement.classList.add('marker--inactive');
-                }
-                break;
+                 const canBeActive = isCurrentActiveStep || visitedSteps.has(markerNumber) || isThisCombatCompleted;
+                 if (canBeActive && !isCombatActive) {
+                     markerElement.classList.add('marker--active');
+                     isClickableForProgression = true;
+                 } else {
+                     markerElement.classList.add('marker--inactive');
+                 }
+                 break;
             case 'navLetter':
-                markerElement.classList.add('marker--nav-letter');
-                markerElement.classList.add('marker--active');
-                isClickableForNavigation = true;
-                break;
+                 markerElement.classList.add('marker--nav-letter');
+                 markerElement.classList.add('marker--active');
+                 if (!isCombatActive) {
+                     isClickableForNavigation = true;
+                 }
+                 break;
             default:
-                if (isCurrentActiveStep) {
-                    markerElement.classList.add('marker--active');
-                    isClickableForProgression = true;
-                } else {
-                    markerElement.classList.add('marker--inactive');
-                }
-                break;
+                 if (!isCombatActive && isCurrentActiveStep) {
+                     markerElement.classList.add('marker--active');
+                     isClickableForProgression = true;
+                 } else {
+                     markerElement.classList.add('marker--inactive');
+                 }
+                 break;
         }
 
         if (isClickableForProgression || isClickableForNavigation) {
-            markerElement.addEventListener('click', (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                let clickType = isClickableForProgression ? 'progression' : 'navigation';
-                clickHandler(markerContent, clickType);
-            });
-        }
+             markerElement.addEventListener('click', (event) => {
+                 event.preventDefault();
+                 event.stopPropagation();
+                 let clickType = isClickableForProgression ? 'progression' : 'navigation';
+                 clickHandler(markerContent, clickType);
+             });
+         }
 
         container.appendChild(markerElement);
     });
