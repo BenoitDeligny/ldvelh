@@ -1,1 +1,81 @@
- 
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: Analysis of Game State Security Options
+globs: []
+alwaysApply: false 
+---
+
+# Game State Security Analysis
+
+This document analyzes different approaches to storing and securing the game state (like `currentPlayerStep`, `visitedSteps`) against client-side modification (cheating).
+
+## Context
+
+Currently, the game state is stored in the browser's `localStorage`. This is convenient but allows users with technical knowledge to modify their state directly using browser developer tools.
+
+## Level 1: Client-Side Only / Low Security
+
+These approaches do not require a backend server.
+
+*   **Option 1a: Accept Risk**
+    *   **Principle:** Keep using `localStorage`. Acknowledge that cheating is possible but has minimal impact in a solo narrative game.
+    *   **Pros:** Simple, no extra work.
+    *   **Cons:** Cheating is trivial.
+    *   **Security:** None.
+    *   **Verdict:** Often sufficient for solo, non-competitive projects.
+
+*   **Option 1b: Simple Obfuscation (e.g., Base64)**
+    *   **Principle:** Encode the data stored in `localStorage` to make direct editing slightly harder.
+    *   **Pros:** Minimal effort, discourages casual tampering.
+    *   **Cons:** Provides no real security; easily reversible.
+    *   **Security:** Very Low.
+    *   **Verdict:** Largely ineffective against motivated individuals.
+
+*   **Option 1c: Client-Side Checksum (Implemented)**
+    *   **Principle:** Calculate a hash/checksum of the game state using a (client-visible) secret key. Store the checksum with the state. Verify on load. If verification fails, reset the state to default.
+    *   **Pros:** Detects tampering if the checksum isn't also updated correctly. Prevents loading invalid/modified state.
+    *   **Cons:** Secret key and algorithm are exposed in client-side JS, allowing forging of valid state + checksum (though more effort). Doesn't prevent *modification*, only *loading* of modified state.
+    *   **Security:** Low (detects tampering, doesn't prevent it).
+    *   **Verdict:** Implemented as a basic deterrent against naive modification.
+
+## Level 2: Hybrid / Server Validation (Medium to High Security)
+
+These approaches require a backend server and API.
+
+*   **Option 2a: Server Validation of Critical Actions**
+    *   **Principle:** The client sends critical actions (e.g., making a choice) to the server API for validation. The server maintains minimal state (e.g., current step) and checks if the action is allowed from that state.
+    *   **Pros:** Significantly improves security for progression logic. Prevents invalid state transitions.
+    *   **Cons:** Requires backend, database, authentication. Adds network latency to actions.
+    *   **Security:** Medium to High (for progression logic).
+    *   **Verdict:** Good compromise if progression integrity is key.
+
+*   **Option 2b: Server-Signed State**
+    *   **Principle:** Client sends state to server for saving. Server adds a cryptographic signature (e.g., HMAC) using a secret key. Client stores the signed state string. Server verifies the signature on load or before actions.
+    *   **Pros:** Prevents undetected modification of the stored state itself.
+    *   **Cons:** Requires backend, key management. Vulnerable to replay attacks (loading old valid states). Adds latency.
+    *   **Security:** Medium (vulnerable to replay).
+    *   **Verdict:** Protects stored state integrity but doesn't prevent using older valid states.
+
+## Level 3: Server Authority (High Security)
+
+*   **Option 3a: Server-Managed State**
+    *   **Principle:** The server is the sole source of truth for the entire game state. Client only sends user actions and renders the state received from the server.
+    *   **Pros:** Maximum security against client-side cheating on state. Protects game logic.
+    *   **Cons:** Most complex architecture. Requires backend, database, auth, constant connectivity. Adds latency to all interactions.
+    *   **Security:** High.
+    *   **Verdict:** Standard for multiplayer/competitive games or where data integrity is paramount. Likely overkill for a solo LDVELH.
+
+## Recommendation for this Project (LDVELH)
+
+*   **Pragmatic:** Stick with **Option 1a (localStorage)** for simplicity, accepting the low risk for this type of game.
+*   **Minimal Deterrent:** Consider **Option 1c (Client Checksum)** if desired, but without expecting real security.
+*   **If Progression Integrity is Crucial:** **Option 2a (Server Validation)** is a viable, more secure step, requiring backend development.
+*   **Overkill:** Option 3a (Server Authority) is likely disproportionate effort for the current scope.
+
+## Current Implementation
+
+We have implemented **Option 1c (Client-Side Checksum)**. The state saved in `localStorage` includes a `chk` property. On load, this checksum is verified against the loaded data. If the check fails, the game resets to its default state. 
