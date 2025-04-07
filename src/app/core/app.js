@@ -14,10 +14,18 @@ export function handleMarkerClick(markerContent, clickType) {
             }
             const stepData = progressionData[clickedStepNumber];
             if (stepData && stepData.choices && stepData.choices.length > 0) {
-                setState('modalContent', { type: 'progression', step: clickedStepNumber, choices: stepData.choices });
+                setState('modalContent', { 
+                    type: 'progression', 
+                    step: clickedStepNumber, 
+                    text: stepData.text,
+                    choices: stepData.choices 
+                });
                 openModal();
             } else {
-                setState('modalContent', { type: 'info', message: `Étape ${clickedStepNumber} atteinte. Vous ne pouvez pas aller plus loin depuis ici.` });
+                setState('modalContent', { 
+                    type: 'info', 
+                    message: `Étape ${clickedStepNumber} atteinte. ${stepData?.text || ''}`
+                });
                 openModal();
             }
             break;
@@ -40,10 +48,18 @@ function openNextStepModal(step) {
     setTimeout(() => {
         const nextStepData = progressionData[step];
         if (nextStepData && nextStepData.choices && nextStepData.choices.length > 0) {
-            setState('modalContent', { type: 'progression', step: step, choices: nextStepData.choices });
+            setState('modalContent', { 
+                type: 'progression', 
+                step: step, 
+                text: nextStepData.text,
+                choices: nextStepData.choices 
+            });
             openModal();
         } else {
-            setState('modalContent', { type: 'info', message: `Vous avez atteint l'étape ${step}. Il n'y a pas d'autres choix ici.` });
+            setState('modalContent', { 
+                type: 'info', 
+                message: `Vous avez atteint l'étape ${step}. ${nextStepData?.text || ''}`
+            });
             openModal();
         }
     }, 50);

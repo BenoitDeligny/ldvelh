@@ -1,9 +1,18 @@
 import { screensData } from './screenData.js';
 
 export const progressionData = {
-  1: { choices: [{ target: 7 }, { target: 18 }] },
-  2: { choices: [{ target: 11 }] },
-  3: { choices: [{ target: 5 }, { target: 21 }] },
+  1: { 
+      text: "Tu te matérialises en un lieu féerique qui te rappelle certains paysages de la Scandinavie, sur Terre. Une atmosphère de mystère plane sur le décor d'un réalisme saisissant. Une force invisible t'invite à aller au bout d'un petit sentier dérobé devant toi...",
+      choices: [{ target: 7 }, { target: 18 }] 
+  },
+  2: { 
+      text: "Un chemin borde les sous-bois qui couvrent cette étroite vallée. Tu sens l'air froid et sec te mordre la peau... Mais le plus inquiétant, c'est le silence écrasant qui règne sur les lieux. Rapidement, tu arrives aux abords de la chaumière en contrebas. Les arbres semblent grandir et étendre leur ombre menaçante...",
+      choices: [{ target: 11 }] 
+  },
+  3: { 
+      text: "A l'intérieur de la chaumière, tu découvres une étonnante reconstitution d'une halle viking plongée dans le silence.",
+      choices: [{ target: 5 }, { target: 21 }] 
+  },
   4: { choices: [{ target: 10 }, { target: 'B' }] },
   5: { choices: [{ target: 12 }] },
   6: { choices: [{ target: 2 }, { target: 15 }, { target: 25 }] },

@@ -49,6 +49,9 @@ export function openModal() {
 
     if (modalData.type === 'progression') {
         dynamicHTML += `<h2>Étape ${modalData.step}</h2>`;
+        if (modalData.text) {
+            dynamicHTML += `<p class="modal-description">${modalData.text}</p>`;
+        }
         if (modalData.choices && modalData.choices.length > 0) {
             dynamicHTML += `<p>Vous pouvez aller à :</p><ul class="modal-choices">`;
             modalData.choices.forEach((choice, index) => {
