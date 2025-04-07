@@ -13,14 +13,38 @@ export const progressionData = {
       text: "A l'intérieur de la chaumière, tu découvres une étonnante reconstitution d'une halle viking plongée dans le silence.",
       choices: [{ target: 5 }, { target: 21 }] 
   },
-  4: { choices: [{ target: 10 }, { target: 'B' }] },
-  5: { choices: [{ target: 12 }] },
-  6: { choices: [{ target: 2 }, { target: 15 }, { target: 25 }] },
-  7: { choices: [{ target: 14 }, { target: 20 }] },
-  8: { choices: [{ target: 29 }] },
-  9: { choices: [{ target: 30 }] },
-  10: { choices: [{ target: 6 }] },
-  11: { choices: [{ target: 19 }, { target: 22 }] },
+  4: { 
+      text: "Prenant ton courage à deux mains, tu t'enfonces dans le bois. La lumière tamisée qui filtre à travers le feuillage projette des ombres inquiétantes sur le sol. Une légère brise agite les branches... Sans rencontrer âme qui vive, tu sors enfin des bois.",
+      choices: [{ target: 9 }] 
+  },
+  5: { 
+      text: "La forêt est de plus en plus dense. Tu as le sentiment que quelque chose est tapi dans les recoins obscurs. Les troncs d'une taille impressionnante et les buissons épineux forment des labyrinthes naturels. Tu as la sensation d'être observé... Parfois, tu aperçois des formes furtives... À d'autres moments, tu entends des rires étouffés...",
+      choices: [{ target: 10 }, { target: 11 }, { target: 6 }, { target: 12 }] 
+  },
+  6: { 
+      text: "Derrière quelques buissons, se dresse un cercle de feu. La chaleur qui se dégage de la barrière de flammes transforme l'air froid en une légère brume qui monte vers les hauteurs. Au centre du cercle, une forme...",
+      choices: [{ target: 2 }, { target: 15 }, { target: 25 }] 
+  },
+  7: { 
+      text: "Prenant ton élan, tu traverses le mur de flammes. Miracle, tu ne ressens aucune brûlure. Devant toi, sur une grosse pierre plate repose une femme. Soudain un grondement retentit. Du sol jaillissent trois squelettes de guerriers vikings qui se ruent sur toi. Pour fuir en retraitant par les flammes, tu dois faire 8 ou plus [Bonus: Adresse + Sport]. Si tu échoues ou si tu choisis de combattre, suis les règles p.12.",
+      choices: [{ text: "Tenter de fuir", target: 'A' }, { text: "Combattre (si victorieux)", target: 13 }] 
+  },
+  8: { 
+      text: "Le sentier serpente au pied d'un étrange massif montagneux. Au milieu de la falaise rocheuse, tu distingues l'entrée d'une caverne que tu ne peux atteindre qu'en escaladant la paroi.",
+      choices: [{ target: 14 }, { target: 10 }, { target: 11 }] 
+  },
+  9: { 
+      text: "Tu découvres un bassin naturel où vient se jeter une cascade. Devant toi se dresse une paroi rocheuse abrupte et anguleuse. À mi-hauteur, tu remarques l'entrée d'une grotte à laquelle tu ne peux accéder qu'en escaladant la falaise.",
+      choices: [{ target: 14 }, { target: 'A' }] 
+  },
+  10: { 
+      text: "Le sentier continue au pied de la paroi rocheuse pour aboutir à un arbre titanesque haut de plusieurs centaines de mètres.",
+      choices: [{ target: 'B' }, { target: 'F' }] // Note: Target 'F' might need definition in screenStartNodes if it's a new screen
+  },
+  11: { 
+      text: "La surface de l'étang est presque entièrement gelée. Mais la pellicule de glace est suffisamment fine pour laisser apparaître un saumon pris au piège. Le poisson avance vers toi et tu entends une voix étouffée : « Che t'en zubblie, libèrre-moi... Che ne feux bas mourrirr tans zette brrizon te klaze... »",
+      choices: [{ target: 10 }, { target: 'A' }, { target: 15 }] 
+  },
   12: { choices: [{ target: 16 }] },
   13: { choices: [{ target: 17 }, { target: 24 }] },
   14: { choices: [{ target: 8 }, { target: 'C' }] },
