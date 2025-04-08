@@ -176,7 +176,6 @@ function resetCombatState() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Multi Combat Controller: Initializing...");
     setupView(); // Get DOM elements
 
     resetCombatState(); // Set initial CS and combat status
@@ -190,6 +189,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Attach event listeners
     addAttackListener(handlePlayerAttack);
     addFleeListener(handlePlayerFlee);
-
-    console.log("Multi Combat Controller: Initialization complete.");
 }); 

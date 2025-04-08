@@ -3,52 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Screen A (Standalone Preview)</title>
-    <link rel="stylesheet" href="../../src/ui/styles/main.css">
+    <title>Screen A - Image Only</title>
+    <!-- Corrected path to global CSS -->
+    <link rel="stylesheet" href="../src/shared/global.css">
     <style>
-        .map-container {
-            background-color: #333;
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
-
-        .marker-area {
+        .map-container {
             position: relative;
-            background-image: url('../../assets/LDVELH_ScreenA.jpg'); 
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            width: 90%;
-            max-width: 600px;
-            aspect-ratio: 2 / 3;
+            line-height: 0;
             border: 1px solid #ccc;
-            overflow: hidden;
         }
-
+        .map-container img {
+            display: block;
+            max-width: 100%;
+            max-height: 98vh;
+            height: auto;
+            object-fit: contain;
+        }
+        /* Marker Styles adapted to match the simple flat style */
         .marker {
+            position: absolute;
             z-index: 1;
+            /* width, height, font-size will be set by JS */
+            border-radius: 3px; 
+            font-family: sans-serif; 
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.4); 
+            transform: translate(-50%, -50%); 
+            cursor: default;
+            color: white; 
+            border: none; 
+            /* Removed width, height, font-size, min/max sizes */
         }
+        .greenNumber {
+            background-color: #4CAF50; /* Flat green from progression.css */
+            /* Removed border colors */
+            /* color: black; */ /* Removed override */
+        }
+        .orangeNumber {
+            background-color: #FF9800; /* Flat orange from progression.css */
+            /* Removed border colors */
+             /* color: black; */ /* Removed override */
+        }
+        /* Removed navLetter style */
     </style>
 </head>
 <body>
     <div class="map-container">
-        <div class="marker-area">
-            <div class="marker orangeNumber" style="top: 14%; left: 25%;">B</div>
-            <div class="marker orangeNumber" style="top: 30%; left: 26%;">10</div>
-            <div class="marker orangeNumber" style="top: 57%; left: 48%;">07</div>
-            <div class="marker orangeNumber" style="top: 36%; left: 80%;">12</div>
-            <div class="marker greenNumber" style="top: 51%; left: 18%;">09</div>
-            <div class="marker greenNumber" style="top: 48%; left: 31%;">08</div>
-            <div class="marker greenNumber" style="top: 65%; left: 21%;">04</div>
-            <div class="marker greenNumber" style="top: 78%; left: 38%;">03</div>
-            <div class="marker greenNumber" style="top: 89%; left: 48%;">02</div>
-            <div class="marker greenNumber" style="top: 69%; left: 50%;">06</div>
-            <div class="marker greenNumber" style="top: 48%; left: 58%;">11</div>
-            <div class="marker greenNumber" style="top: 58%; left: 81%;">05</div>
+        <!-- Added ID back to the image -->
+        <img id="map-image" src="../assets/IMG_20250407_080514.jpg" alt="Screen A Map">
 
-        </div>
+        <!-- Markers using simple flat styles, left adjusted by 0.25% -->
+        <div class="marker orangeNumber" data-marker="B" style="top: 23.0%; left: 26.55%;">B</div>
+        <div class="marker greenNumber"  data-marker="02" style="top: 95.7%; left: 55.25%;">02</div>
+        <div class="marker greenNumber"  data-marker="03" style="top: 82.1%; left: 40.85%;">03</div>
+        <div class="marker greenNumber"  data-marker="04" style="top: 71.7%; left: 20.15%;">04</div>
+        <div class="marker greenNumber"  data-marker="05" style="top: 61.3%; left: 84.35%;">05</div>
+        <div class="marker greenNumber"  data-marker="06" style="top: 69.9%; left: 51.25%;">06</div>
+        <div class="marker orangeNumber" data-marker="07" style="top: 62.1%; left: 45.75%;">07</div>
+        <div class="marker greenNumber"  data-marker="08" style="top: 52.5%; left: 28.25%;">08</div>
+        <div class="marker greenNumber"  data-marker="09" style="top: 53.2%; left: 11.25%;">09</div>
+        <div class="marker orangeNumber" data-marker="10" style="top: 36.4%; left: 36.68%;">10</div>
+        <div class="marker greenNumber"  data-marker="11" style="top: 51.1%; left: 59.65%;">11</div>
+        <div class="marker orangeNumber" data-marker="12" style="top: 43.7%; left: 81.57%;">12</div>
+
     </div>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM Loaded, script starting..."); // Log: Script start
+    const mapImage = document.getElementById('map-image');
+    const markers = document.querySelectorAll('.marker[data-marker]');
+
+    const originalWidth = 1812;
+    const originalHeight = 3084;
+    // Base size for markers on original image dimensions (Increased again by +10/+5)
+    const originalMarkerWidth = 130; 
+    const originalMarkerHeight = 130;
+    const originalFontSize = 66;
+    
+    const markerCoords = {
+        'B':  { x: 478,  y: 708  },
+        '02': { x: 998,  y: 2952 },
+        '03': { x: 738,  y: 2532 },
+        '04': { x: 362,  y: 2212 },
+        '05': { x: 1526, y: 1892 },
+        '06': { x: 926,  y: 2156 },
+        '07': { x: 826,  y: 1916 },
+        '08': { x: 510,  y: 1620 },
+        '09': { x: 202,  y: 1640 },
+        '10': { x: 660,  y: 1124 },
+        '11': { x: 1078, y: 1576 },
+        '12': { x: 1476, y: 1348 }
+    };
+
+    function updateMarkerPositions() {
+        console.log("updateMarkerPositions called"); // Log: Function called
+        if (!mapImage.complete || mapImage.naturalWidth === 0 || mapImage.offsetWidth === 0) {
+            console.log("Image not ready or dimensions are zero.", { complete: mapImage.complete, naturalW: mapImage.naturalWidth, offsetW: mapImage.offsetWidth }); // Log: Image readiness
+            return; 
+        }
+
+        const currentWidth = mapImage.offsetWidth;
+        const currentHeight = mapImage.offsetHeight;
+        const scaleX = currentWidth / originalWidth;
+        const scaleY = currentHeight / originalHeight;
+        const scale = Math.min(scaleX, scaleY);
+        console.log("Image Scales:", { scaleX, scaleY, scale }); // Log: Scales
+
+        const newMarkerWidth = originalMarkerWidth * scale;
+        const newMarkerHeight = originalMarkerHeight * scale;
+        const newFontSize = originalFontSize * scale;
+        console.log("Calculated Marker Size:", { w: newMarkerWidth, h: newMarkerHeight, font: newFontSize }); // Log: Calculated sizes
+
+        markers.forEach(marker => {
+            const markerId = marker.dataset.marker;
+            const coords = markerCoords[markerId];
+
+            if (coords) {
+                // Restore application of calculated styles
+                const newX = coords.x * scaleX;
+                const newY = coords.y * scaleY;
+                
+                marker.style.left = `${newX}px`; // Removed + offsetX
+                marker.style.top = `${newY}px`;
+                marker.style.width = `${newMarkerWidth}px`;
+                marker.style.height = `${newMarkerHeight}px`;
+                marker.style.fontSize = `${newFontSize}px`;
+                // Restore other necessary styles if they were removed from CSS
+                marker.style.position = 'absolute';
+                marker.style.color = 'white'; // Assuming text is white
+                marker.style.display = 'flex'; // Ensure flex is applied for centering
+                marker.style.justifyContent = 'center';
+                marker.style.alignItems = 'center';
+
+            } else {
+                console.warn(`Coordinates not found for marker: ${markerId}`);
+            }
+        });
+        console.log("Finished updating markers."); // Log: Update finished
+    }
+
+    console.log("Setting up image load/resize listeners..."); // Log: Listener setup
+    if (mapImage.complete && mapImage.naturalWidth > 0) {
+        console.log("Image already complete, calling update directly."); // Log: Image complete
+        updateMarkerPositions();
+    } else {
+        console.log("Image not yet loaded, setting onload handler."); // Log: Setting onload
+        mapImage.onload = () => {
+            console.log("Image onload event fired."); // Log: Onload fired
+            updateMarkerPositions();
+        };
+        // Add error handler for image loading
+        mapImage.onerror = () => {
+             console.error("Failed to load the map image!");
+        }
+    }
+    
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+             console.log("Window resize detected, updating markers..."); // Log: Resize trigger
+             updateMarkerPositions();
+        }, 100); 
+    });
+});
+    </script>
 </body>
 </html> 

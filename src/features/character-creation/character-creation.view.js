@@ -4,7 +4,6 @@ let rollButton, selectButtons, optionCards, nameInput, createButton;
 
 // Function to get references to DOM elements needed by the view
 export function setupView() {
-  console.log("Character Creation View: Getting DOM elements...");
   rollButton = document.getElementById('roll-button');
   selectButtons = document.querySelectorAll('.select-button');
   optionCards = document.querySelectorAll('.stats-option-card');

@@ -6,19 +6,17 @@ let attackButton, fleeButton;
 let logList, logContainer;
 
 export function setupView() {
-    console.log("Multi Combat View: Getting DOM elements...");
     playerNameEl = document.getElementById('player-name');
     playerCsInitialEl = document.getElementById('player-cs-initial');
     playerCsCurrentEl = document.getElementById('player-cs-current');
-    playerDexterityEl = document.getElementById('player-dexterity'); 
-    playerDexterityDisplayEl = document.getElementById('player-dexterity-display'); 
+    playerDexterityEl = document.getElementById('player-dexterity');
+    playerDexterityDisplayEl = document.getElementById('player-dexterity-display');
     monsterListEl = document.getElementById('monster-list');
     attackButton = document.getElementById('attack-button');
     fleeButton = document.getElementById('flee-button');
     logList = document.getElementById('log-list');
     logContainer = logList ? logList.parentElement : null;
 
-    // Add checks for potentially missing elements
     if (!playerNameEl || !monsterListEl || !attackButton || !fleeButton || !logList) {
         console.warn("Multi Combat View: One or more essential elements might be missing!");
     }
@@ -30,7 +28,7 @@ export function displayPlayerState(player) {
     if(playerCsInitialEl) playerCsInitialEl.textContent = player.initialCS;
     if(playerCsCurrentEl) playerCsCurrentEl.textContent = player.currentCS;
     if (playerDexterityEl) playerDexterityEl.textContent = player.dexterity;
-    if (playerDexterityDisplayEl) playerDexterityDisplayEl.textContent = player.dexterity; 
+    if (playerDexterityDisplayEl) playerDexterityDisplayEl.textContent = player.dexterity;
 }
 
 // Update the list of monsters display

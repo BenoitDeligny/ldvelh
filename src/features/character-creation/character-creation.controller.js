@@ -23,7 +23,6 @@ let selectedStats = null;
 // --- Event Handlers ---
 
 function handleRollStats() {
-    console.log("Controller: Roll button clicked");
     generatedStats = []; // Clear previous stats
     selectedStats = null; // Reset selection
 
@@ -38,19 +37,16 @@ function handleRollStats() {
     setSelectButtonsState(false); // Enable select buttons
     clearSelectionHighlight();
     checkCreationReadiness();
-    console.log("Controller: Generated Stats:", generatedStats);
 }
 
 function handleSelectStats(event) {
     const selectedOptionIndex = parseInt(event.target.dataset.option) - 1;
-    console.log(`Controller: Select button clicked for option ${selectedOptionIndex + 1}`);
     selectedStats = generatedStats[selectedOptionIndex];
 
     // Update the view
     highlightSelectedCard(selectedOptionIndex);
     setSelectButtonsState(true); // Disable select buttons after selection
     checkCreationReadiness();
-    console.log("Controller: Selected Stats:", selectedStats);
 }
 
 function handleNameInput() {
@@ -61,13 +57,8 @@ function handleNameInput() {
 function handleCreateCharacter() {
     const characterName = getCharacterName();
     if (characterName && selectedStats) {
-        console.log("Controller: Create button clicked");
-        console.log("Creating character:", {
-            name: characterName,
-            stats: selectedStats
-        });
-        displayCreationSuccess(characterName);
         // TODO: Implement actual character saving/next step logic here (e.g., call a state management service)
+        displayCreationSuccess(characterName);
     } else {
         console.warn("Controller: Create button clicked but not ready (name or stats missing)");
     }
@@ -86,7 +77,6 @@ function checkCreationReadiness() {
 // --- Initialization ---
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Character Creation Controller: Initializing...");
     setupView(); // Initialize view (get DOM elements)
 
     // Attach event listeners via the view
@@ -99,6 +89,4 @@ document.addEventListener('DOMContentLoaded', () => {
     checkCreationReadiness(); // Initial check for create button
     // Roll button is enabled by default in HTML
     setSelectButtonsState(true); // Select buttons initially disabled
-
-    console.log("Character Creation Controller: Initialization complete.");
 }); 

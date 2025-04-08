@@ -13,8 +13,7 @@ export function rollD6() {
  */
 export function rollMultipleD6(numberOfDice) {
     let sum = 0;
-    // Ensure numberOfDice is a positive integer
-    const numDice = Math.max(0, Math.floor(numberOfDice)); 
+    const numDice = Math.max(0, Math.floor(numberOfDice));
     for (let i = 0; i < numDice; i++) {
         sum += rollD6();
     }

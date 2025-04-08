@@ -12,7 +12,7 @@ export function getDamageDice(currentCS, initialCS, isPlayer) {
     const ranges = isPlayer
         ? [[1, 6, 0], [7, 18, 1], [19, 30, 2], [31, 54, 3], [55, 78, 4], [79, 114, 5], [115, 150, 6], [151, 192, 7], [193, 234, 8], [235, 282, 9], [283, Infinity, 10]]
         : [[1, 8, 0], [9, 24, 1], [25, 40, 2], [41, 64, 3], [65, 88, 4], [89, 124, 5], [125, 172, 6], [173, 220, 7], [221, 276, 8], [277, 332, 9], [332, Infinity, 10]];
-    const csToCheck = initialCS; 
+    const csToCheck = initialCS;
     for (const range of ranges) {
         if (csToCheck >= range[0] && csToCheck <= range[1]) {
             return range[2];
@@ -59,10 +59,6 @@ export function checkFleeSuccess(playerDexterity, opponents) {
     const totalMonsterCS = livingOpponents.reduce((sum, m) => sum + m.currentCS, 0);
     const roll = rollMultipleD6(2);
     const fleeScore = roll + playerDexterity;
-    
-    // Log the attempt details (could be moved to UI layer later)
-    console.log(`Jet de Fuite (2D6 + Adresse): ${roll} + ${playerDexterity} = ${fleeScore}`);
-    console.log(`Force de Combat adverse totale actuelle: ${totalMonsterCS}`);
     
     return fleeScore > totalMonsterCS;
 }

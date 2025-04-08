@@ -26,9 +26,11 @@ import {
     getScreenForNumber 
 } from './progression.data.js';
 
+// Import dice roller if needed for actions
+import { rollD6 } from '../../shared/game-logic/dice.logic.js'; 
+
 // --- Central Event Handler for Marker Clicks (Called by View/Markers) ---
 export function handleMarkerClick(markerContent, clickType) {
-    console.log(`Progression Controller: Marker clicked - Content: ${markerContent}, Type: ${clickType}`);
     switch (clickType) {
         case 'progression':
             const clickedStepNumber = parseInt(markerContent, 10);
@@ -36,7 +38,6 @@ export function handleMarkerClick(markerContent, clickType) {
                 console.error(`Progression click received for non-numeric content: ${markerContent}`);
                 return;
             }
-            // Open modal for the clicked progression step
             openProgressionModalForStep(clickedStepNumber);
             break;
 
@@ -64,7 +65,6 @@ function updateMarkersForCurrentScreen() {
         return;
     }
     
-    console.log(`Progression Controller: Updating markers for screen ${currentScreenId}`);
     clearMarkers();
     state.markersData[currentScreenId].forEach(markerData => {
         createAndAppendMarker(markerData, state, handleMarkerClick);
@@ -107,8 +107,6 @@ export function handleChoice(target) {
     const currentAppState = getState();
     const choiceOriginStep = currentAppState.modalContent?.step;
     const currentScreen = currentAppState.currentScreen;
-
-    console.log(`Progression Controller: Choice selected. Target: ${JSON.stringify(target)}, Origin: ${choiceOriginStep}`);
 
     if (choiceOriginStep !== undefined) {
         addVisitedStep(choiceOriginStep);
@@ -171,31 +169,111 @@ function handlePostChoiceAction(targetInfo, currentScreen) {
     }
 }
 
+// --- Handler for the 'Do Action' button in the modal ---
+export function handleDoAction(stepNumber) {
+    if (stepNumber === undefined) {
+        console.error("handleDoAction called without step number.");
+        return;
+    }
+    const stepData = progressionData[stepNumber];
+    const currentAppState = getState();
+    const currentScreen = currentAppState.currentScreen;
+
+    // Close the modal before proceeding
+    closeModal();
+    setState('isModalOpen', false);
+    setState('modalContent', null);
+
+    let outcomeTarget = null; // The target step/screen after the action
+    let actionSuccess = false; // Assume failure initially
+
+    // --- Specific Action Logic ---
+    switch (stepNumber) {
+        case 14: // Escalader la paroi
+            // TODO: Replace with actual player stats access
+            const adresseEscalade = 4; // Placeholder
+            const rollEscalade = rollD6() + rollD6(); 
+            console.log(`Action Escalade (Step 14): Roll (2D6) = ${rollEscalade}, Requis <= ${adresseEscalade + 0 /* Escalade/Survie bonus ?*/}`); 
+            // Assuming success requires rolling *equal to or less than* the score (common LDVELH mechanic)
+            // Adjust logic if it's roll >= targetNumber
+            // The text says "faire 9 ou plus", so using >= 9
+            actionSuccess = rollEscalade >= 9;
+            outcomeTarget = actionSuccess ? 'C' : 8;
+            break;
+
+        case 15: // Briser la glace
+            // TODO: Replace with actual player stats access
+            const puissance = 5; // Placeholder
+            const rollGlace = rollD6(); 
+            console.log(`Action Briser Glace (Step 15): Roll (1D6) = ${rollGlace}, Requis <= ${puissance}`);
+            // The text says "faire 7 ou plus", so using >= 7
+            actionSuccess = rollGlace >= 7;
+            // Note: Text mentions needing 9+ on re-roll if failed, not handled here yet.
+            outcomeTarget = actionSuccess ? 16 : 'A'; // Simple success/failure for now
+            break;
+
+        case 17: // Grimper sur le tronc
+            // TODO: Replace with actual player stats access
+            const adresseEscaladeTronc = 4; // Placeholder
+            const rollTronc = rollD6() + rollD6();
+            console.log(`Action Grimper Tronc (Step 17): Roll (2D6) = ${rollTronc}, Requis <= ${adresseEscaladeTronc + 0 /* Escalade bonus ?*/}`);
+            // The text says "faire 8 ou plus", so using >= 8
+            actionSuccess = rollTronc >= 8;
+            outcomeTarget = actionSuccess ? 21 : 18;
+            // Need to also handle the choice to go back to A, maybe add back as a choice?
+            break;
+
+        case 24: // Rester sur la corniche
+            // TODO: Replace with actual player stats access
+            const adresseSurvie = 4; // Placeholder
+            const rollCorniche = rollD6() + rollD6();
+            console.log(`Action Rester Corniche (Step 24): Roll (2D6) = ${rollCorniche}, Requis <= ${adresseSurvie + 0 /* Survie bonus ?*/}`);
+            // The text says "faire 12 ou plus", so using >= 12
+            actionSuccess = rollCorniche >= 12;
+            outcomeTarget = actionSuccess ? 30 : 26;
+            break;
+
+        default:
+            console.warn(`No specific action defined for step ${stepNumber} in handleDoAction.`);
+            // Optionally, just re-open the modal or do nothing
+            return; 
+    }
+
+    // Add visited step regardless of outcome? Or only on success?
+    addVisitedStep(stepNumber);
+
+    // Determine the next step/screen based on the outcomeTarget
+    const targetInfo = determineChoiceTarget(outcomeTarget, currentScreen);
+
+    if (targetInfo) {
+        console.log(`Action outcome: ${actionSuccess ? 'Success' : 'Failure'}. Moving to target:`, targetInfo);
+        setState('currentPlayerStep', targetInfo.nextStep);
+        handlePostChoiceAction(targetInfo, currentScreen); // Reuse existing logic for navigation/modal opening
+    } else {
+        console.error(`Could not determine target info for action outcome: ${outcomeTarget}`);
+        // Fallback: Update markers on current screen? Show error?
+        updateMarkersForCurrentScreen();
+    }
+}
+
 // --- Modal Combat Action Handlers (EXPORTED) ---
 
 export function handleFleeCombat() {
-    console.log("Progression Controller: Flee combat chosen.");
     setState('isCombatActive', false);
     closeModal();
     updateMarkersForCurrentScreen();
 }
 
 export function handleEngageCombat() {
-    console.log("Progression Controller: Engage combat chosen.");
 }
 
 // --- Handler for Modal Close Request (passed to modal setup) ---
 function handleCloseModalRequest() {
-    // === DEBUG LOG ===
-    console.log("Progression Controller: handleCloseModalRequest() called.");
-    // ================
     if (isModalOpen()) {
-        console.log("Progression Controller: Modal close requested.");
         closeModal();
         setState('isModalOpen', false);
         setState('modalContent', null);
         if (getState().isCombatActive) {
-            console.log("Controller: Resetting combat active state due to modal close.");
             setState('isCombatActive', false);
             updateMarkersForCurrentScreen();
         }
@@ -204,25 +282,17 @@ function handleCloseModalRequest() {
 
 // --- Application Initialization ---
 function initializeApp() {
-    console.log("(Restored) Progression Controller: Initializing application...");
     loadInitialData(); 
 
-    // Setup View (only gets markerArea ref now)
     setupView(); 
     
-    // Create modal structure using the function from modal.js
     createModalStructure(); 
     
-    // Setup modal close handlers using the function from modal.js
     setupModalCloseHandlers(handleCloseModalRequest); 
 
-    // Initial screen load and marker update
     handleScreenLoadOrHashChange(updateMarkersForCurrentScreen); 
     
-    // Listen for future hash changes
     window.addEventListener('hashchange', () => handleScreenLoadOrHashChange(updateMarkersForCurrentScreen));
-    
-    console.log("(Restored) Progression Application Initialized");
 }
 
 document.addEventListener('DOMContentLoaded', initializeApp); 

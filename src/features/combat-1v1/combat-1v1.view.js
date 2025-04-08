@@ -6,7 +6,6 @@ let attackButton, fleeButton;
 let logList, logContainer;
 
 export function setupView() {
-  console.log("Combat 1v1 View: Getting DOM elements...");
   playerNameEl = document.getElementById('player-name');
   playerCsInitialEl = document.getElementById('player-cs-initial');
   playerCsCurrentEl = document.getElementById('player-cs-current');
@@ -18,7 +17,6 @@ export function setupView() {
   logList = document.getElementById('log-list');
   logContainer = logList ? logList.parentElement : null;
 
-  // Basic check for essential elements
   if (!playerNameEl || !monsterNameEl || !attackButton || !fleeButton || !logList) {
       console.error("Combat 1v1 View: One or more essential elements not found!");
   }

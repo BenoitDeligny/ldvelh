@@ -12,7 +12,6 @@ let markerArea; // Removed modal elements refs
 
 // Initialize DOM element references for the view
 export function setupView() { // Removed closeModalHandler param
-    console.log("(Restored) Progression View: Getting DOM elements...");
     markerArea = document.querySelector(markerAreaSelector);
     if (!markerArea) {
         console.error("(Restored) Progression View: Marker area not found!");

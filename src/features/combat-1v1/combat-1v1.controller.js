@@ -116,7 +116,6 @@ function endCombat(message) {
 // --- Initialization ---
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Combat 1v1 Controller: Initializing...");
     setupView(); // Initialize view references
 
     // Reset state for potential reloads (though typically state would come from elsewhere)
@@ -132,6 +131,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Attach event listeners
     addAttackButtonListener(handlePlayerAttack);
     addFleeButtonListener(handlePlayerFlee);
-
-    console.log("Combat 1v1 Controller: Initialization complete.");
 }); 

@@ -1,7 +1,7 @@
 // Handles modal logic: creation, opening, closing, content population
 
 import { getState, setState } from './progression.state.js';
-import { handleChoice, handleFleeCombat, handleEngageCombat } from './progression.controller.js';
+import { handleChoice, handleFleeCombat, handleEngageCombat, handleDoAction } from './progression.controller.js';
 
 // Import DOM selectors defined in the view
 import { modalOverlaySelector, modalContentSelector, closeModalButtonSelector, modalDynamicContentId } from './progression.view.js';
@@ -13,7 +13,6 @@ export function createModalStructure() {
     if (document.querySelector(modalOverlaySelector)) {
         return; // Already exists
     }
-    console.log("(Restored) Progression Modal: Creating structure...");
     const modalHTML = `
         <div id="${modalOverlaySelector.substring(1)}" style="display: none;">
             <div id="${modalContentSelector.substring(1)}">
@@ -102,7 +101,14 @@ function buildProgressionModalHTML(modalData, isCombatStep) {
     if (modalData.text) {
         html += `<p class="modal-description">${modalData.text}</p><hr>`;
     }
-    // Apply visual disabling styles via class or style attribute
+
+    // Add Action button if actionInfo exists
+    if (modalData.actionInfo && modalData.actionInfo.buttonText) {
+        html += `<div class="action-container">
+                    <button class="choice-button do-action-button action-button">${modalData.actionInfo.buttonText}</button>
+                 </div><hr>`;
+    }
+
     html += `<div class="original-choices-container" ${isCombatStep ? 'data-combat-active="true"' : ''}>`;
     if (modalData.choices && modalData.choices.length > 0) {
         html += `<p>Choix possibles :</p><ul class="modal-choices">`;
@@ -144,6 +150,16 @@ function attachModalButtonListeners(contentElement) {
             }
         });
     });
+
+    // Do Action button
+    const doActionButton = contentElement.querySelector('.do-action-button');
+    if (doActionButton) {
+        doActionButton.addEventListener('click', () => {
+            // Call a new handler in the controller for specific actions
+            handleDoAction(getState().modalContent?.step); // Pass the current step number
+        });
+    }
+
     // Flee button
     const fleeButton = contentElement.querySelector('.flee-combat-button');
     if (fleeButton) {

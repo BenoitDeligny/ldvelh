@@ -22,7 +22,7 @@ function simpleHash(str) {
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
-    hash |= 0; // Convert to 32bit integer
+    hash |= 0; 
   }
   return hash.toString();
 }
@@ -62,7 +62,6 @@ function loadStateFromLocalStorage() {
                     visitedSteps: new Set(savedState.visitedSteps || []),
                     completedCombats: new Set(savedState.completedCombats || [])
                 };
-                console.log("Game state loaded and verified.");
             } else {
                 console.warn("Checksum mismatch or missing! Resetting game state.");
                 localStorage.removeItem(STATE_STORAGE_KEY);
@@ -70,7 +69,6 @@ function loadStateFromLocalStorage() {
             }
         } else {
             currentState = { ...defaultState, visitedSteps: new Set(), completedCombats: new Set() };
-            console.log("No saved game state found, initializing.");
         }
     } catch (error) {
         console.error('Error loading/verifying state:', error);
