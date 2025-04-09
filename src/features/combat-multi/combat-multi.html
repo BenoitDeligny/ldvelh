@@ -14,13 +14,11 @@
 
     <main class="main-content-container combat-container-multi"> <!-- Use common container + specific -->
         <div class="combatants-display-multi">
-            <div class="player-section"> <!-- New wrapper for player title + info -->
+            <div class="player-section" id="player-section"> <!-- Added id -->
                 <h2>Votre Légende</h2> 
-                <div id="player-info">
-                    <!-- Removed H2 from here -->
-                    <p><span id="player-name">Nom Joueur</span> (Adresse: <span id="player-dexterity">X</span>)</p>
-                    <p>FC Initiale: <span id="player-cs-initial">--</span></p>
-                    <p>FC Actuelle: <span id="player-cs-current">--</span></p>
+                <div id="player-info"> 
+                    <!-- Player info will be populated by JS inside #player-section -->
+                    <!-- Removed static spans -->
                 </div>
             </div>
 
@@ -28,11 +26,10 @@
                 CONTRE
             </div>
 
-            <div id="monsters-info">
+            <div id="monsters-section"> <!-- Changed id from monsters-info -->
                 <h2>Adversaires</h2>
-                <ul id="monster-list">
-                    <!-- Monster list will be populated here -->
-                </ul>
+                <!-- Removed <ul id="monster-list"> -->
+                <!-- Monster groups will be populated here by JS -->
             </div>
         </div>
 
@@ -43,7 +40,7 @@
 
         <div class="combat-log-container"> <!-- Use common log container class -->
             <h2>Journal de Combat</h2>
-            <ul id="log-list"></ul>
+            <div id="combat-log"></div> <!-- Changed ul#log-list to div#combat-log -->
         </div>
     </main>
 

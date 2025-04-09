@@ -105,4 +105,71 @@ input[type="text"] {
     width: 100%;
     display: block;
     margin-top: 30px;
+}
+
+/* Styles for Character List - Add to character-creation.css */
+
+#character-list-section {
+  margin-top: 2em;
+  padding-top: 1em;
+  border-top: 1px solid #ccc;
+}
+
+.character-list-container {
+  display: flex; /* Arrange cards horizontally */
+  flex-wrap: wrap; /* Allow wrapping to next line */
+  gap: 1em; /* Space between cards */
+}
+
+.character-card {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 1em;
+  background-color: #f9f9f9;
+  min-width: 180px; /* Minimum width before wrapping */
+  flex: 1; /* Allow cards to grow */
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+
+.character-card h4 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  color: #333;
+}
+
+.character-card p {
+  margin: 0.3em 0;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.character-card p small {
+    color: #888;
+}
+
+.character-card.active-character {
+  border-color: #007bff; /* Blue border */
+  background-color: #e7f3ff; /* Light blue background */
+  box-shadow: 2px 2px 5px rgba(0, 123, 255, 0.2); /* Subtle blue shadow */
+}
+
+.activate-button {
+  margin-top: 0.8em;
+  padding: 5px 10px !important; /* Smaller padding */
+  font-size: 0.8em !important; /* Smaller font */
+  background-color: #6c757d; /* Grey color */
+  border-color: #6c757d;
+}
+
+.activate-button:hover {
+   background-color: #5a6268;
+   border-color: #545b62;
+}
+
+/* Style activate button differently if card is already active? */
+.active-character .activate-button {
+   background-color: #28a745; /* Green if active */
+   border-color: #28a745;
+   cursor: default;
+   pointer-events: none; /* Prevent clicking if already active */
 } 

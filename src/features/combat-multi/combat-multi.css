@@ -13,25 +13,27 @@ h1.combat-title {
 /* Layout for combatants */
 .combatants-display-multi {
     display: flex;
-    justify-content: space-between; 
-    align-items: flex-start; 
-    gap: 20px; 
-    margin-bottom: 30px; 
-    border-bottom: 1px dashed #ccc; 
-    padding-bottom: 20px; 
+    justify-content: space-around; /* Space out player, vs, monsters */
+    align-items: flex-start; /* Align tops */
+    gap: 15px;
 }
 
 /* NEW: Player section wrapper in flex layout */
 .player-section {
     flex-basis: 35%; 
     flex-shrink: 0;
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    min-width: 200px; /* Ensure minimum width */
 }
 
 /* Title within the player section */
 .player-section h2 {
-    color: #3a7a3a;
-    margin-bottom: 10px; /* Space between title and box */
-    /* Inherits general h2 styles from global.css */
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--primary-color); /* Use variable from global.css */
 }
 
 /* Player info box styling */
@@ -47,12 +49,10 @@ h1.combat-title {
 
 /* VS Separator */
 .vs-multi {
-    text-align: center;
-    font-size: 1.3em;
     font-weight: bold;
     color: #555;
-    align-self: center; 
-    flex-shrink: 0;
+    align-self: center; /* Center 'VS' vertically */
+    font-size: 1.2em;
 }
 
 /* Monsters section */
@@ -99,10 +99,9 @@ h1.combat-title {
 
 /* Actions section */
 .actions-multi {
-    text-align: center;
-    margin: 25px 0;
-    padding-top: 20px;
-    border-top: 1px dashed #ccc;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
 }
 
 /* Buttons inherit .action-button */
@@ -126,4 +125,87 @@ h1.combat-title {
     margin-top: 15px;
     margin-bottom: 10px;
     font-size: 1.2em; /* Slightly larger */
+}
+
+/* General styles for the multi-combat page */
+.combat-container-multi {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between sections */
+}
+
+/* Styling for Monsters Section & Cards */
+#monsters-section {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    flex-grow: 1; /* Allow monsters section to take more space */
+    display: flex; /* Use flexbox for cards */
+    flex-wrap: wrap; /* Allow cards to wrap */
+    gap: 10px; /* Space between monster cards */
+}
+
+.monster-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    min-width: 150px; /* Minimum width for each card */
+}
+
+.monster-card h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: #c0392b; /* A reddish color for monster names */
+}
+
+.monster-card p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #555;
+}
+
+/* Styling for Actions and Log */
+.combat-log-container {
+    border: 1px solid #eee;
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto; /* Enable scrolling */
+    background-color: #fdfdfd;
+}
+
+#combat-log p {
+    margin: 3px 0;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+/* Specific log entry types (optional styling) */
+.log-player {
+    background-color: #eaf2f8; /* Light blue for player actions */
+    border-left: 3px solid #3498db;
+}
+
+.log-monster {
+    background-color: #fdedec; /* Light red for monster actions */
+    border-left: 3px solid #e74c3c;
+}
+
+.log-result {
+    font-weight: bold;
+}
+
+.log-info {
+    color: #888; 
+    font-style: italic;
+}
+
+/* Style for round markers */
+.log-round {
+    text-align: center;
+    color: var(--secondary-color); /* Use a theme color */
+    margin: 8px 0; /* Add some vertical space */
+    font-style: italic;
 } 

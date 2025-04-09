@@ -4,89 +4,186 @@ import {
     setupView,
     displayOptions,
     getCharacterName,
+    setCharacterName,
     setRollButtonState,
     setSelectButtonsState,
     setCreateButtonState,
+    setDeleteAllButtonState,
     highlightSelectedCard,
     clearSelectionHighlight,
     displayCreationSuccess,
     addRollButtonListener,
     addSelectButtonListeners,
     addNameInputListener,
-    addCreateButtonListener
+    addCreateButtonListener,
+    addDeleteAllButtonListener,
+    clearStatsDisplay,
+    displayCharacterList
 } from './character-creation.view.js';
+
+// Storage Keys
+const SLOTS_STORAGE_KEY = 'characterSlotsData';
+const ACTIVE_CHAR_ID_KEY = 'activeCharacterId';
+const MAX_SLOTS = 3;
 
 // State managed by the controller
 let generatedStats = [];
 let selectedStats = null;
+let characterSlots = [];
+
+// --- Local Storage Functions ---
+
+function saveCharacters(characters) {
+    try {
+        localStorage.setItem(SLOTS_STORAGE_KEY, JSON.stringify(characters));
+    } catch (error) {
+        console.error("Failed to save character slots:", error);
+    }
+}
+
+function loadCharacters() {
+    try {
+        const savedData = localStorage.getItem(SLOTS_STORAGE_KEY);
+        if (savedData) {
+            const characters = JSON.parse(savedData);
+            return Array.isArray(characters) ? characters : [];
+        }
+    } catch (error) {
+        console.error("Failed to load character slots:", error);
+    }
+    return [];
+}
+
+function deleteAllCharactersFromStorage() {
+    try {
+        localStorage.removeItem(SLOTS_STORAGE_KEY);
+        localStorage.removeItem(ACTIVE_CHAR_ID_KEY);
+        characterSlots = [];
+        // console.log("All character slots and active ID deleted.");
+    } catch (error) {
+        console.error("Failed to delete character data:", error);
+    }
+}
+
+function getActiveCharacterId() {
+    return localStorage.getItem(ACTIVE_CHAR_ID_KEY);
+}
+
+function setActiveCharacter(characterId) {
+    try {
+        localStorage.setItem(ACTIVE_CHAR_ID_KEY, characterId);
+        // console.log(`Character ${characterId} set as active.`);
+        const activeId = getActiveCharacterId();
+        displayCharacterList(characterSlots, activeId);
+    } catch (error) {
+        console.error(`Failed to set active character ${characterId}:`, error);
+    }
+}
 
 // --- Event Handlers ---
 
 function handleRollStats() {
-    generatedStats = []; // Clear previous stats
-    selectedStats = null; // Reset selection
-
+    generatedStats = [];
+    selectedStats = null;
     for (let i = 0; i < 3; i++) {
-        const stats = generateStatsSet(); // Call business logic
+        const stats = generateStatsSet();
         generatedStats.push(stats);
     }
-
-    // Update the view
     displayOptions(generatedStats);
-    setRollButtonState(true); // Disable roll button
-    setSelectButtonsState(false); // Enable select buttons
+    setRollButtonState(true);
+    setSelectButtonsState(false);
     clearSelectionHighlight();
-    checkCreationReadiness();
+    setCreateButtonState(true);
 }
 
 function handleSelectStats(event) {
     const selectedOptionIndex = parseInt(event.target.dataset.option) - 1;
     selectedStats = generatedStats[selectedOptionIndex];
-
-    // Update the view
     highlightSelectedCard(selectedOptionIndex);
-    setSelectButtonsState(true); // Disable select buttons after selection
+    setSelectButtonsState(true);
     checkCreationReadiness();
 }
 
 function handleNameInput() {
-    // No specific logic needed here other than checking readiness
     checkCreationReadiness();
 }
 
 function handleCreateCharacter() {
     const characterName = getCharacterName();
     if (characterName && selectedStats) {
-        // TODO: Implement actual character saving/next step logic here (e.g., call a state management service)
+        const newCharacter = {
+            id: Date.now(),
+            name: characterName,
+            ...selectedStats
+        };
+        characterSlots = loadCharacters();
+        if (characterSlots.length >= MAX_SLOTS) {
+            characterSlots.shift();
+        }
+        characterSlots.push(newCharacter);
+        saveCharacters(characterSlots);
         displayCreationSuccess(characterName);
-    } else {
-        console.warn("Controller: Create button clicked but not ready (name or stats missing)");
+        const activeId = getActiveCharacterId();
+        displayCharacterList(characterSlots, activeId);
+        setDeleteAllButtonState(false);
+        selectedStats = null;
+        clearStatsDisplay();
+        clearSelectionHighlight();
+        setRollButtonState(false);
+        setSelectButtonsState(true);
+        setCreateButtonState(true);
+    }
+}
+
+function handleDeleteAllCharacters() {
+    if (confirm("Êtes-vous sûr de vouloir effacer TOUS les personnages sauvegardés ?")) {
+        deleteAllCharactersFromStorage();
+        const activeId = getActiveCharacterId();
+        displayCharacterList(characterSlots, activeId);
+        selectedStats = null;
+        setCharacterName('');
+        clearStatsDisplay();
+        clearSelectionHighlight();
+        setRollButtonState(false);
+        setSelectButtonsState(true);
+        setCreateButtonState(true);
+        setDeleteAllButtonState(true);
     }
 }
 
 // --- Helper Logic ---
 
-// Checks if the name is entered and stats are selected, then updates the create button state
 function checkCreationReadiness() {
     const nameIsEntered = getCharacterName() !== '';
     const statsAreSelected = selectedStats !== null;
     const isReady = nameIsEntered && statsAreSelected;
-    setCreateButtonState(!isReady); // Disable button if not ready
+    setCreateButtonState(!isReady);
 }
 
 // --- Initialization ---
 
 document.addEventListener('DOMContentLoaded', () => {
-    setupView(); // Initialize view (get DOM elements)
-
-    // Attach event listeners via the view
+    setupView();
+    characterSlots = loadCharacters();
+    const activeId = getActiveCharacterId();
+    displayCharacterList(characterSlots, activeId);
+    setRollButtonState(false);
+    setSelectButtonsState(true);
+    setCreateButtonState(true);
+    setDeleteAllButtonState(characterSlots.length === 0);
+    setCharacterName('');
+    clearStatsDisplay();
     addRollButtonListener(handleRollStats);
     addSelectButtonListeners(handleSelectStats);
     addNameInputListener(handleNameInput);
     addCreateButtonListener(handleCreateCharacter);
+    addDeleteAllButtonListener(handleDeleteAllCharacters);
 
-    // Set initial button states
-    checkCreationReadiness(); // Initial check for create button
-    // Roll button is enabled by default in HTML
-    setSelectButtonsState(true); // Select buttons initially disabled
+    document.body.addEventListener('activateCharacterRequest', (event) => {
+        const characterIdToActivate = event.detail.characterId;
+        if (characterIdToActivate) {
+            // console.log(`Controller received activateCharacterRequest for ID: ${characterIdToActivate}`);
+            setActiveCharacter(characterIdToActivate);
+        }
+    });
 }); 
