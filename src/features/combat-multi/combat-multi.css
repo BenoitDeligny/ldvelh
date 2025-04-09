@@ -1,149 +1,178 @@
 /* Specific styles for Multi Combat */
 
+/* Ensure root elements have height - Focusing ONLY on height */
+html {
+    box-sizing: border-box; 
+}
+*, *::before, *::after {
+    box-sizing: inherit; 
+}
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 20px); /* Slightly less than full viewport height */
+    margin: 0; /* Ensure NO body margin */
+}
+
+/* Global container fills vertical space, centered horizontally */
+main.main-content-container {
+    max-width: 95%;
+    width: 100%; 
+    margin: 0 auto; /* NO VERTICAL MARGINS */
+    box-sizing: border-box;
+    display: flex; 
+    flex-direction: column; 
+    flex-grow: 1; /* Take available vertical space in body */
+}
+
 /* Specific h1 color */
 h1.combat-title {
     color: #b33434;
 }
 
-/* Container styling */
-.main-content-container.combat-container-multi {
-    max-width: 900px; 
-}
+/* --- Layout Global (Conteneur Principal) --- */
+/* main.main-content-container est stylé dans global.css ET surchargé ci-dessus */
 
-/* Layout for combatants */
-.combatants-display-multi {
+/* Wrapper for the flex columns fills vertical space */
+.combat-container-multi {
     display: flex;
-    justify-content: space-around; /* Space out player, vs, monsters */
-    align-items: flex-start; /* Align tops */
-    gap: 15px;
+    flex-direction: row;
+    /* gap, align-items, etc. are relevant but not the CORE height issue */
+    gap: 30px;
+    align-items: stretch; /* Stretch columns */
+    width: 100%; 
+    box-sizing: border-box;
+    flex-grow: 1; /* Take available vertical space in main */
 }
 
-/* NEW: Player section wrapper in flex layout */
-.player-section {
-    flex-basis: 35%; 
-    flex-shrink: 0;
-    border: 1px solid #ccc;
+/* Left Column: Combat Area */
+#combat-area {
+    display: flex; 
+    flex-direction: column;
+    gap: 25px; 
+    flex: 2 1 70%; 
+    min-width: 450px; 
+}
+
+/* Right Column: Log Area */
+#log-area { 
+    flex: 1 1 30%; 
+    min-width: 300px; 
     padding: 15px;
     border-radius: 5px;
-    background-color: #f9f9f9;
-    min-width: 200px; /* Ensure minimum width */
+    background-color: #fdfdfd;
+    border: 1px solid #eee;
+    display: flex; 
+    flex-direction: column;
 }
 
-/* Title within the player section */
-.player-section h2 {
+#log-area h2 {
     margin-top: 0;
     margin-bottom: 10px;
-    color: var(--primary-color); /* Use variable from global.css */
-}
-
-/* Player info box styling */
-#player-info {
-    border: 1px solid #ddd;
-    padding: 15px;
-    border-radius: 5px;
-    background-color: #f0f9f0; 
-    /* Removed flex properties */
-}
-
-/* Removed #player-info h2 rule as it's handled by .player-section h2 */
-
-/* VS Separator */
-.vs-multi {
-    font-weight: bold;
-    color: #555;
-    align-self: center; /* Center 'VS' vertically */
-    font-size: 1.2em;
-}
-
-/* Monsters section */
-#monsters-info {
-    flex-basis: 55%; 
-    flex-shrink: 1;
-    min-width: 0; 
-}
-
-#monsters-info h2 {
-    color: #b33434;
-    margin-bottom: 10px; /* Match player title spacing */
-    /* Inherits general h2 styles from global.css */
-}
-
-#monster-list {
-    list-style: none;
-    padding: 10px;
-    margin: 0;
-    max-height: 350px; 
-    overflow-y: auto;
-    border: 1px solid #eee;
-    border-radius: 5px;
-}
-
-#monster-list li {
-    border: 1px solid #f5c6cb; 
-    padding: 10px;
-    margin-bottom: 8px;
-    border-radius: 5px;
-    background-color: #fdf5f5;
-}
-
-#monster-list li:last-child {
-    margin-bottom: 0;
-}
-
-#monster-list .monster-name {
-    font-weight: bold;
-    color: #a32424;
-    display: block;
-    margin-bottom: 5px;
-}
-
-/* Actions section */
-.actions-multi {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
-
-/* Buttons inherit .action-button */
-/* #attack-button color rule removed - inherits grey */
-
-#flee-button {
-     background-color: #ffc107; /* Yellow for flee - KEEP */
-     color: #333;
-}
-#flee-button:hover:not(:disabled) {
-     background-color: #e0a800;
-}
-
-/* Log uses .combat-log-container from global.css */
-
-/* General h2 styling within the container */
-.combat-container-multi h2 {
+    flex-shrink: 0;
     color: #777;
     border-bottom: 1px solid #eee;
     padding-bottom: 5px;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    font-size: 1.2em; /* Slightly larger */
+    font-size: 1.2em;
 }
 
-/* General styles for the multi-combat page */
-.combat-container-multi {
+#combat-log { /* Scrollable content with MAX HEIGHT */
+    overflow-y: auto; 
+    max-height: 500px; /* Set an explicit max height for the log content */
+    padding-right: 5px;
+    font-size: 0.95em; 
+    line-height: 1.4; 
+}
+
+/* --- Elements within Combat Area --- */
+.combatants-display-multi {
     display: flex;
-    flex-direction: column;
-    gap: 20px; /* Space between sections */
+    align-items: flex-start;
+    gap: 15px;
+    width: 100%;
+    flex-shrink: 0; 
 }
 
-/* Styling for Monsters Section & Cards */
-#monsters-section {
+#player-section {
     border: 1px solid #ccc;
     padding: 15px;
     border-radius: 5px;
     background-color: #f9f9f9;
-    flex-grow: 1; /* Allow monsters section to take more space */
-    display: flex; /* Use flexbox for cards */
-    flex-wrap: wrap; /* Allow cards to wrap */
-    gap: 10px; /* Space between monster cards */
+    min-width: 180px;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.vs-multi {
+    font-weight: bold;
+    color: #555;
+    align-self: center;
+    font-size: 1.2em;
+    padding: 0 10px;
+}
+
+#monsters-section { 
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    flex-grow: 1; 
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 200px; 
+    align-content: flex-start; 
+}
+
+.actions-multi { 
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    padding-top: 15px;
+    flex-shrink: 0; 
+}
+
+#defeated-monsters-section {
+    margin-top: auto; /* Should still work if #combat-area stretches */
+    margin-bottom: 0; 
+    padding: 10px;
+    border: 1px solid #e0e0e0; /* Restore original border */
+    border-radius: 4px;
+    background-color: #fafafa;
+    flex-shrink: 0; 
+}
+
+#defeated-monsters-section h3 { /* Styles unchanged */
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.1em;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 4px;
+}
+
+#defeated-monsters-list { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 5px 15px; 
+    padding-top: 5px; 
+}
+
+#defeated-monsters-list p { /* Styles unchanged */
+    margin: 0; 
+    padding: 2px 5px; 
+    font-size: 0.9em;
+    color: #666;
+    background-color: #eee; 
+    border-radius: 3px;
+}
+
+#player-section h2 {
+     color: var(--primary-color);
+}
+
+#monsters-section h2 {
+    color: #b33434;
 }
 
 .monster-card {
@@ -152,28 +181,44 @@ h1.combat-title {
     border-radius: 4px;
     background-color: #fff;
     box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-    min-width: 150px; /* Minimum width for each card */
+    min-width: 160px;
 }
 
 .monster-card h4 {
     margin-top: 0;
     margin-bottom: 5px;
-    color: #c0392b; /* A reddish color for monster names */
+    color: #c0392b;
 }
 
 .monster-card p {
-    margin: 0;
+    margin: 0 0 5px 0;
     font-size: 0.9em;
     color: #555;
 }
 
-/* Styling for Actions and Log */
-.combat-log-container {
-    border: 1px solid #eee;
-    padding: 10px;
-    max-height: 200px;
-    overflow-y: auto; /* Enable scrolling */
-    background-color: #fdfdfd;
+.monster-card .allocation-controls {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.monster-card .allocate-btn {
+    padding: 2px 6px;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+.monster-card .allocate-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+#flee-button {
+     background-color: #ffc107;
+     color: #333;
+}
+#flee-button:hover:not(:disabled) {
+     background-color: #e0a800;
 }
 
 #combat-log p {
@@ -182,14 +227,13 @@ h1.combat-title {
     border-radius: 3px;
 }
 
-/* Specific log entry types (optional styling) */
 .log-player {
-    background-color: #eaf2f8; /* Light blue for player actions */
+    background-color: #eaf2f8;
     border-left: 3px solid #3498db;
 }
 
 .log-monster {
-    background-color: #fdedec; /* Light red for monster actions */
+    background-color: #fdedec;
     border-left: 3px solid #e74c3c;
 }
 
@@ -202,10 +246,17 @@ h1.combat-title {
     font-style: italic;
 }
 
-/* Style for round markers */
 .log-round {
     text-align: center;
-    color: var(--secondary-color); /* Use a theme color */
-    margin: 8px 0; /* Add some vertical space */
+    color: var(--secondary-color);
+    margin: 8px 0;
     font-style: italic;
-} 
+}
+
+/* Ensure other items in #combat-area don't grow excessively - REMOVE #defeated-monsters-section */
+.combatants-display-multi,
+.actions-multi
+/* Removed #defeated-monsters-section from this rule */ {
+    flex-shrink: 0; /* Prevent shrinking */
+}
+/* defeated-monsters-section uses margin-top: auto to position itself */ 

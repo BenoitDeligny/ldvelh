@@ -12,36 +12,51 @@
         <h1 class="combat-title">Combat 1 contre N</h1>
     </header>
 
-    <main class="main-content-container combat-container-multi"> <!-- Use common container + specific -->
-        <div class="combatants-display-multi">
-            <div class="player-section" id="player-section"> <!-- Added id -->
-                <h2>Votre Légende</h2> 
-                <div id="player-info"> 
-                    <!-- Player info will be populated by JS inside #player-section -->
-                    <!-- Removed static spans -->
+    <main class="main-content-container"> <!-- Only global container class -->
+        <div class="combat-container-multi"> <!-- NEW Wrapper div for flex layout -->
+            <!-- Colonne Gauche: Zone de Combat -->
+            <div id="combat-area">
+                <div class="combatants-display-multi">
+                    <div class="player-section" id="player-section"> <!-- Added id -->
+                        <h2>Votre Légende</h2> 
+                        <div id="player-info"> 
+                            <!-- Player info will be populated by JS inside #player-section -->
+                            <!-- Removed static spans -->
+                        </div>
+                    </div>
+
+                    <div class="vs-multi">
+                        CONTRE
+                    </div>
+
+                    <div id="monsters-section"> <!-- Changed id from monsters-info -->
+                        <h2>Adversaires</h2>
+                        <!-- Removed <ul id="monster-list"> -->
+                        <!-- Monster groups will be populated here by JS -->
+                    </div>
                 </div>
+
+                <div class="actions-multi">
+                    <button id="attack-button" class="action-button">Attaquer (<span id="player-dexterity-display">X</span> cible(s))</button> <!-- Added common class -->
+                    <button id="flee-button" class="action-button">Fuir</button> <!-- Added common class -->
+                </div>
+
+                <!-- Section pour les monstres vaincus (Réajoutée) -->
+                <div id="defeated-monsters-section">
+                    <h3>Monstres Vaincus</h3>
+                    <div id="defeated-monsters-list">
+                        <!-- La liste sera peuplée par JS -->
+                    </div>
+                </div>
+
+            </div> <!-- Close #combat-area -->
+
+            <!-- Colonne Droite: Zone du Journal -->
+            <div id="log-area"> <!-- Renamed from combat-log-container -->
+                <h2>Journal de Combat</h2>
+                <div id="combat-log"></div> <!-- Log content goes here -->
             </div>
-
-            <div class="vs-multi">
-                CONTRE
-            </div>
-
-            <div id="monsters-section"> <!-- Changed id from monsters-info -->
-                <h2>Adversaires</h2>
-                <!-- Removed <ul id="monster-list"> -->
-                <!-- Monster groups will be populated here by JS -->
-            </div>
-        </div>
-
-        <div class="actions-multi">
-            <button id="attack-button" class="action-button">Attaquer (<span id="player-dexterity-display">X</span> cible(s))</button> <!-- Added common class -->
-            <button id="flee-button" class="action-button">Fuir</button> <!-- Added common class -->
-        </div>
-
-        <div class="combat-log-container"> <!-- Use common log container class -->
-            <h2>Journal de Combat</h2>
-            <div id="combat-log"></div> <!-- Changed ul#log-list to div#combat-log -->
-        </div>
+        </div> <!-- Close combat-container-multi -->
     </main>
 
     <script src="combat-multi.controller.js" type="module"></script> <!-- Updated path/filename -->
